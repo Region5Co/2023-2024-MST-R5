@@ -3,8 +3,8 @@
 class Motor {
   friend class Robot;
   public:
-    Motor(int pin1, int pin2, int en);
-    Motor(int pin1, int pin2, int en, bool reversed);
+    Motor(int pwmPin, int dirPin, int enPin);
+    Motor(int pwmPin, int dirPin, int enPin, bool reversed);
 
     void init();
 
@@ -15,8 +15,8 @@ class Motor {
 
   private:  
     Motor();
-    int pin1;
-    int pin2;
-    int en;
+    int pwmPin;
+    int dirPin;
+    int enPin;
     bool reversed;
 };

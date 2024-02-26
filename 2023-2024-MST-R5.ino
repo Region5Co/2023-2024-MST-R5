@@ -1,29 +1,21 @@
-#include "Drive/Drive.h"
-#include "Devices/Lidar.h"
+#include "Robot.h"
 
-#define R5_ROUND 1
-#if R5_ROUND == 2
-#define STATEMACHINE 2
-#else
-#define STATEMACHINE 1
-#endif
+Motor fl(2, 4, 3);
+Motor fr(7, 8, 5);
+Motor br(10, 11, 6, true);
+Motor bl(12, 13, 9, true);
 
-void setup(){
-  switch(STATEMACHINE){
-    case 2:
-      break;
-    default:
-    case 1:
-      break;
-  }
+Robot robot(fl, fr, br, bl);
+
+void setup() {
+  robot.init();
 }
 
-void loop(){
-  switch(STATEMACHINE){
-    case 2:
-      break;
-    default:
-    case 1:
-      break;
-  }
+void loop() {
+  robot.drive(FORWARD, 100, 3000);
+  robot.drive(BACKWARD, 100, 3000);
+  robot.drive(LEFT, 100, 3000);
+  robot.drive(RIGHT, 100, 3000);
+  robot.turn(CW, 100, 1000);
+  robot.turn(CCW, 100, 1000);
 }

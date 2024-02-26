@@ -68,6 +68,13 @@ void robot_4_wheels::move_down(uint8_t pwm) {
 	bLeft.move_cclockwise(pwm);
 }
 
+void robot_4_wheels::halt_all() {
+	fRight.halt();
+	bRight.halt();
+	fLeft.halt();
+	bLeft.halt();
+}
+
 }  // namespace robot
 
 #endif //MECANUM_DRIVER_H

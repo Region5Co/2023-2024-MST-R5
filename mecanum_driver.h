@@ -46,6 +46,7 @@ void move_right(uint8_t pwm);
 void move_left(uint8_t pwm);
 void move_up(uint8_t pwm);
 void move_down(uint8_t pwm);
+void halt_all();
 
 private:
 // four motors

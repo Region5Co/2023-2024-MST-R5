@@ -1,13 +1,16 @@
 #include "Robot.h"
+#include "IEEE_Pinout.h"
+
+Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE);
+Motor fl(FRONT_LEFT_PWM, FRONT_LEFT_DIR, FRONT_MOTORS_ENABLE);
+Motor br(BACK_RIGHT_PWM, BACK_RIGHT_DIR, BACK_MOTORS_ENABLE);
+Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE);
 
 
-Motor bl(D5, D6, D0, false);
-Motor fl(D7, D8, D0, false);
-Motor fr(D4, D3, D0, false);
-Motor br(D1, D2, D0, false);
+
 
 Robot robot(fl, fr, br, bl);
-bool rev =false;
+
 void setup() {
   Serial.begin(9600);
   Serial.println("Initializing");
@@ -16,8 +19,6 @@ void setup() {
 }
 
 void loop() {
-  int i=76;
-  //rev= !rev;
   robot.drive(FORWARD, 100, 1500);
   robot.drive(BACKWARD, 100, 1500);
   robot.drive(LEFT, 100, 1500);

@@ -1,9 +1,13 @@
 #include "Robot.h"
-
+/*
 Robot::Robot(int m1p1, int m1p2, int m1EN, int m2p1, int m2p2, int m2EN, int m3p1, int m3p2, int m3EN, int m4p1, int m4p2, int m4EN) {
   Robot(Motor(m1p1, m1p2, m1EN), Motor(m1p1, m1p2, m1EN), Motor(m1p1, m1p2, m1EN), Motor(m1p1, m1p2, m1EN)); 
 }
+*/
 
+//@brief
+//@param fl,fr,br,bl represents respective motor 
+//
 Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
   type = MECANUM;
   this->fl = fl;
@@ -12,16 +16,22 @@ Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
   this->bl = bl;
 }
 
+/*
 Robot::Robot(int m1p1, int m1p2, int m1EN, int m2p1, int m2p2, int m2EN){
   Robot(Motor(m1p1, m1p2, m1EN), Motor(m2p1, m2p2, m2EN));
 }
+*/
 
+/*
 Robot::Robot(Motor fl, Motor fr) {
   type = TWO_WHEEL;
   this->fl = fl;
   this->fr = fr;
 }
+*/
 
+//@brief Initializes motors for the Robot
+//
 void Robot::init() {
   fl.init();
   fr.init();
@@ -32,10 +42,12 @@ void Robot::init() {
   }
 }
 
+/*
 void Robot::reverseMotors(bool fl, bool fr) {
   this->fl.setReversed(fl);
   this->fr.setReversed(fr);
 }
+*/
 
 void Robot::reverseMotors(bool fl, bool fr, bool br, bool bl) {
   this->fl.setReversed(fl);
@@ -47,7 +59,7 @@ void Robot::reverseMotors(bool fl, bool fr, bool br, bool bl) {
 void Robot::stop() {
   fl.stop();
   fr.stop();
-
+  
   if(type == MECANUM) {
     br.stop();
     bl.stop();
@@ -76,7 +88,7 @@ void Robot::drive(moveDirection direction, int speed) {
 
     return;
   }
-
+  /*
   if(type == TWO_WHEEL) {
     switch(direction) {
       case FORWARD:
@@ -90,14 +102,18 @@ void Robot::drive(moveDirection direction, int speed) {
 
     return;
   }
-};
+  */
+}
 
+/*
 void Robot::drive(int fl, int fr) {
   if(type == MECANUM) return;
 
   this->fl.run(fl);
   this->fr.run(fr);
 }
+*/
+
 
 void Robot::drive(int fl, int fr, int br, int bl) {
   if(type == TWO_WHEEL) return;
@@ -114,11 +130,13 @@ void Robot::drive(moveDirection direction, int speed, int duration) {
   stop();
 }
 
+/*
 void Robot::drive(int fl, int fr, int duration) {
   drive(fl, fr);
   delay(duration);
   stop();
 }
+*/
 
 void Robot::drive(int fl, int fr, int br, int bl, int duration) {
   drive(fl, fr, br, bl);
@@ -140,7 +158,7 @@ void Robot::turn(turnDirection direction, int speed) {
 
     return;
   }
-
+  /*
   if(type == TWO_WHEEL) {
     switch(direction) {
       case CW:
@@ -151,13 +169,13 @@ void Robot::turn(turnDirection direction, int speed) {
         drive(-speed, speed);
         break;
     }
-
     return;
   }
+  */
 };
 
 void Robot::turn(turnDirection direction, int speed, int duration) {
   turn(direction, speed);
   delay(duration);
   stop();
-};
+}

@@ -14,8 +14,8 @@ Motor::Motor() {
 //@param pwmPin is the enable (A or B) pin on the DRV8835 breakoutboard
 //@param dirPin is the phase (A or B) pin on the DRV8835 breakoutboard
 //
-Motor::Motor(int pwmPin, int dirPin,int enPin) {
-  Motor(pwmPin, dirPin, false);
+Motor::Motor(int pwmPin, int dirPin, int enPin) {
+  Motor(pwmPin, dirPin, enPin, false);
 }
 
 //@brief Assigns pins to a motor class with option for setting reversed polarity

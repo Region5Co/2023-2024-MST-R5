@@ -1,12 +1,8 @@
 #include "Robot.h"
-/*
-Robot::Robot(int m1p1, int m1p2, int m1EN, int m2p1, int m2p2, int m2EN, int m3p1, int m3p2, int m3EN, int m4p1, int m4p2, int m4EN) {
-  Robot(Motor(m1p1, m1p2, m1EN), Motor(m1p1, m1p2, m1EN), Motor(m1p1, m1p2, m1EN), Motor(m1p1, m1p2, m1EN)); 
-}
-*/
+
 
 //@brief
-//@param fl,fr,br,bl represents respective motor 
+//@param fl,fr,br,bl represents motor in respective position 
 //
 Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
   type = MECANUM;
@@ -16,39 +12,19 @@ Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
   this->bl = bl;
 }
 
-/*
-Robot::Robot(int m1p1, int m1p2, int m1EN, int m2p1, int m2p2, int m2EN){
-  Robot(Motor(m1p1, m1p2, m1EN), Motor(m2p1, m2p2, m2EN));
-}
-*/
-
-/*
-Robot::Robot(Motor fl, Motor fr) {
-  type = TWO_WHEEL;
-  this->fl = fl;
-  this->fr = fr;
-}
-*/
-
 //@brief Initializes motors for the Robot
 //
 void Robot::init() {
   fl.init();
   fr.init();
-  
-  if(type == MECANUM) {
-    br.init();
-    bl.init();
-  }
+  br.init();
+  bl.init();
 }
 
-/*
-void Robot::reverseMotors(bool fl, bool fr) {
-  this->fl.setReversed(fl);
-  this->fr.setReversed(fr);
-}
-*/
 
+//@brief Sets the reverses constant for each motor
+//@param fl,fr,br,bl boolean for rather the motor should be reversed 
+//
 void Robot::reverseMotors(bool fl, bool fr, bool br, bool bl) {
   this->fl.setReversed(fl);
   this->fr.setReversed(fr);
@@ -56,18 +32,20 @@ void Robot::reverseMotors(bool fl, bool fr, bool br, bool bl) {
   this->bl.setReversed(bl);
 }
 
+//@brief Stops the Robot motors
+//
 void Robot::stop() {
   fl.stop();
   fr.stop();
-  
-  if(type == MECANUM) {
-    br.stop();
-    bl.stop();
-  }
+  br.stop();
+  bl.stop();
 }
 
+//@brief Moves the robot in passed direction with an unanumous speed
+//@param direction Requires an input of enum @ref moveDirection to go desired direction
+//@param speed An integer ranging from [-100, 100] for all motors
+//
 void Robot::drive(moveDirection direction, int speed) {
-  if(type == MECANUM) {
     switch(direction) {
       case FORWARD:
         drive(speed, speed, speed, speed);
@@ -84,96 +62,65 @@ void Robot::drive(moveDirection direction, int speed) {
       case RIGHT:
         drive(speed, -speed, speed, -speed);
         break;
-    }
-
-    return;
-  }
-  /*
-  if(type == TWO_WHEEL) {
-    switch(direction) {
-      case FORWARD:
-        drive(speed, speed);
-        break;
-
-      case BACKWARD:
-        drive(-speed, -speed);
+      default:
         break;
     }
-
-    return;
-  }
-  */
 }
 
-/*
-void Robot::drive(int fl, int fr) {
-  if(type == MECANUM) return;
-
-  this->fl.run(fl);
-  this->fr.run(fr);
-}
-*/
-
-
+//@brief Moves the robot wheels with independent speed values
+//@param fl,fr,br,bl Integer representing velocity ranging [-100,100]
+//
 void Robot::drive(int fl, int fr, int br, int bl) {
-  if(type == TWO_WHEEL) return;
-
   this->fl.run(fl);
   this->fr.run(fr);
   this->br.run(br);
   this->bl.run(bl);
 }
 
+//@brief Moves the robot in passed direction with an unanumous speed
+//@param direction Requires an input of enum @ref moveDirection to go desired direction
+//@param speed An integer ranging from [-100, 100] for all motors
+//@param duration Time in milliseconds to allow robot to drive
+//
 void Robot::drive(moveDirection direction, int speed, int duration) {
   drive(direction, speed);
   delay(duration);
   stop();
 }
 
-/*
-void Robot::drive(int fl, int fr, int duration) {
-  drive(fl, fr);
-  delay(duration);
-  stop();
-}
-*/
-
+//@brief Drives robot with motors at independent speeds for a set time
+//@param fl,fr,br,bl Integer representing velocity ranging [-100,100]
+//@param duration Time in milliseconds to allow robot to drive
+//
 void Robot::drive(int fl, int fr, int br, int bl, int duration) {
   drive(fl, fr, br, bl);
   delay(duration);
   stop();
 }
 
+//@brief Moves the robot in the passed direction about its center
+//@param direction Requires an input of enum @ref turnDirection to go desired direction
+//@param speed An integer ranging from [-100, 100] for all motors
+//
 void Robot::turn(turnDirection direction, int speed) {
-  if(type == MECANUM) {
-    switch(direction) {
-      case CW:
-        drive(speed, -speed, -speed, speed);
-        break;
+  switch(direction) {
+    case CW:
+      drive(speed, -speed, -speed, speed);
+      break;
 
-      case CCW:
-        drive(speed, -speed, -speed, speed);
-        break;
-    }
-
-    return;
+    case CCW:
+      drive(-speed, speed, speed, -speed);
+      break;
+    default:
+      break;
   }
-  /*
-  if(type == TWO_WHEEL) {
-    switch(direction) {
-      case CW:
-        drive(speed, -speed);
-        break;
+}
 
-      case CCW:
-        drive(-speed, speed);
-        break;
-    }
-    return;
-  }
-  */
-};
-
+//@brief Moves the robot in the passed direction about its center
+//@param direction Requires an input of enum @ref turnDirection to go desired direction
+//@param speed An integer ranging from [-100, 100] for all motors
+//@param duration Time in milliseconds to allow robot to drive
+//
 void Robot::turn(turnDirection direction, int speed, int duration) {
   turn(direction, speed);
   delay(duration);

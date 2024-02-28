@@ -13,6 +13,7 @@ Motor::Motor() {
 //@brief Assigns pins to a motor class
 //@param pwmPin is the enable (A or B) pin on the DRV8835 breakoutboard
 //@param dirPin is the phase (A or B) pin on the DRV8835 breakoutboard
+//@param enPin is the Mode pin for A and B on the DRV8835 breakoutboard
 //
 Motor::Motor(int pwmPin, int dirPin, int enPin) {
   Motor(pwmPin, dirPin, enPin, false);
@@ -21,6 +22,7 @@ Motor::Motor(int pwmPin, int dirPin, int enPin) {
 //@brief Assigns pins to a motor class with option for setting reversed polarity
 //@param pwmPin is the enable (A or B) pin on the DRV8835 breakoutboard
 //@param dirPin is the phase (A or B) pin on the DRV8835 breakoutboard
+//@param enPin is the Mode pin for A and B on the DRV8835 breakoutboard
 //@param reversed is to setup motor to run in reverse if it is mounted backwards
 //
 Motor::Motor(int pwmPin, int dirPin, int enPin, bool reversed) {
@@ -58,7 +60,6 @@ void Motor::setReversed(bool reversed) {
 //
 void Motor::stop() {
   setSpeed(0);
-  digitalWrite(pwmPin, 0);
   digitalWrite(dirPin, 0);
 }
 
@@ -73,14 +74,12 @@ void Motor::run(int velocity) {
 
   if(velocity > 0) {
     setSpeed(velocity);
-    digitalWrite(pwmPin, !reversed);
     digitalWrite(dirPin, reversed);
     return;
   }
 
   if(velocity < 0) {
     setSpeed(velocity * -1);
-    digitalWrite(pwmPin, reversed);
     digitalWrite(dirPin, !reversed);
     return;
   }

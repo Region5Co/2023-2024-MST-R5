@@ -1,22 +1,29 @@
 #include "Robot.h"
 
-Motor fl(2, 4, 3);
-Motor fr(7, 8, 5);
-Motor br(10, 11, 6, true);
-Motor bl(12, 13, 9, true);
+
+Motor bl(D5, D6, D0, false);
+Motor fl(D7, D8, D0, false);
+Motor fr(D4, D3, D0, false);
+Motor br(D1, D2, D0, false);
 
 Robot robot(fl, fr, br, bl);
-
+bool rev =false;
 void setup() {
+  Serial.begin(9600);
+  Serial.println("Initializing");
   robot.init();
+  Serial.println("Initialized");
 }
 
 void loop() {
-  robot.drive(FORWARD, 100, 3000);
-  robot.drive(BACKWARD, 100, 3000);
-  robot.drive(LEFT, 100, 3000);
-  robot.drive(RIGHT, 100, 3000);
-  robot.turn(CW, 100, 1000);
-  robot.turn(CCW, 100, 1000);
+  int i=76;
+  //rev= !rev;
+  robot.drive(FORWARD, 100, 1500);
+  robot.drive(BACKWARD, 100, 1500);
+  robot.drive(LEFT, 100, 1500);
+  robot.drive(RIGHT, 100, 1500);
+  robot.turn(CW, 100, 1500);
+  robot.turn(CCW, 100, 1500);
+ 
 }
 

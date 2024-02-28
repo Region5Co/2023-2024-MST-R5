@@ -152,7 +152,7 @@ void Robot::turn(turnDirection direction, int speed) {
         break;
 
       case CCW:
-        drive(speed, -speed, -speed, speed);
+        drive(-speed, speed, speed, -speed);
         break;
     }
 

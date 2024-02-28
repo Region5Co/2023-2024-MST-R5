@@ -5,7 +5,6 @@
 //@param fl,fr,br,bl represents motor in respective position 
 //
 Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
-  type = MECANUM;
   this->fl = fl;
   this->fr = fr;
   this->br = br;

@@ -51,5 +51,7 @@
 #define BACK_RIGHT_DIR        D2
 #define BACK_LEFT_PWM         D5
 #define BACK_LEFT_DIR         D6
+#define HC_TRIGGER            SD2
+#define HC_ECHO               SD3
 
 #endif

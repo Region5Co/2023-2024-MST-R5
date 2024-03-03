@@ -1,12 +1,12 @@
 #include "Motor.h"
-
+#include "Arduino.h"
 
 //@brief Motor class for "null" motor used for testing
 //
 Motor::Motor() {
   pwmPin = -1;
   dirPin = -1;
-  reversed = false;
+  reversed = true;
 }
 
 
@@ -15,8 +15,8 @@ Motor::Motor() {
 //@param dirPin is the phase (A or B) pin on the DRV8835 breakoutboard
 //@param enPin is the Mode pin for A and B on the DRV8835 breakoutboard
 //
-Motor::Motor(int pwmPin, int dirPin, int enPin) {
-  Motor(pwmPin, dirPin, enPin, false);
+Motor::Motor(int pwm, int dir, int en) {
+  Motor(pwm, dir, en, false);
 }
 
 //@brief Assigns pins to a motor class with option for setting reversed polarity
@@ -25,19 +25,19 @@ Motor::Motor(int pwmPin, int dirPin, int enPin) {
 //@param enPin is the Mode pin for A and B on the DRV8835 breakoutboard
 //@param reversed is to setup motor to run in reverse if it is mounted backwards
 //
-Motor::Motor(int pwmPin, int dirPin, int enPin, bool reversed) {
-  this->pwmPin   = pwmPin;
-  this->dirPin   = dirPin;
-  this->enPin    = enPin;
-  this->reversed = reversed;
-}
+Motor::Motor(int pwm, int dir, int en, bool rev): 
+  pwmPin(pwm),
+  dirPin(dir),
+  enPin(en),
+  reversed(rev){}
+
 
 //@brief Initializes control pins by turning respectives ports to outputs
 //
 void Motor::init() {
-  pinMode(pwmPin, OUTPUT);
-  pinMode(dirPin, OUTPUT);
-  pinMode(enPin,  OUTPUT);
+  pinMode(this->pwmPin, OUTPUT);
+  pinMode(this->dirPin, OUTPUT);
+  pinMode(this->enPin,  OUTPUT);
 }
 
 //@brief Sets speed of the pwmPin or enable of the motor

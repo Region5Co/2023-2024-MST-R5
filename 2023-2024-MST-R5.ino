@@ -2,18 +2,20 @@
 #include "Robot.h"
 #include "IEEE_Pinout.h"
 #include "HCSR04.h"
-
+//#include "Servo.h"
 
 Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE);
 Motor fl(FRONT_LEFT_PWM, FRONT_LEFT_DIR, FRONT_MOTORS_ENABLE);
 Motor br(BACK_RIGHT_PWM, BACK_RIGHT_DIR, BACK_MOTORS_ENABLE);
 Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE, true);
 HCSR04 hc(HC_TRIGGER, HC_ECHO);
+//Servo myservo;
 
 Robot robot(fl, fr, br, bl);
 
 void setup() {
   robot.init();
+  //myservo.attach(pin);
 }
 
 void loop() {
@@ -33,8 +35,15 @@ void square() {
 }
 
 void moveUntil(moveDirection dir, int targetDist) {
+
   while (hc.dist() > targetDist) {
     robot.drive(dir, 100);
   }
   robot.stop();
+}
+
+void moveUntilWithServo(moveDirection dir, int targetDist) {
+  //myservo.write(degree);
+  delay(15);
+  moveUntil(dir, targetDist);
 }

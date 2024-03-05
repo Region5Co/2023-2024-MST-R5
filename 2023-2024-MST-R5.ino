@@ -1,7 +1,7 @@
 
 #include "Robot.h"
 #include "IEEE_Pinout.h"
-#include <HCSR04.h>
+#include "HCSR04.h"
 
 
 Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE);
@@ -19,16 +19,12 @@ void setup() {
 }
 
 void loop() {
-  robot.drive(FORWARD, 70, 1500);
-  robot.drive(BACKWARD, 70, 1500);
-  robot.drive(LEFT, 70, 1500);
-  robot.drive(RIGHT, 70, 1500);
-  robot.turn(CW, 70, 1500);
-  robot.turn(CCW, 70, 1500);
- 
-  //square();
-  Serial.println(hc.dist() );
-  delay(60);
+  testUltra();
+  delay(500);
+}
+
+void testUltra() {
+  Serial.println(hc.dist());
 }
 
 void square() {
@@ -36,4 +32,11 @@ void square() {
   robot.drive(RIGHT, 100, 1000);
   robot.drive(BACKWARD, 100, 1000);
   robot.drive(LEFT, 100, 1000);
+}
+
+void moveUntil(moveDirection dir, int targetDist) {
+  while (hc.dist() > targetDist) {
+    robot.drive(dir, 100);
+  }
+  robot.stop();
 }

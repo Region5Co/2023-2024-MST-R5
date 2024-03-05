@@ -10,8 +10,6 @@ Motor br(BACK_RIGHT_PWM, BACK_RIGHT_DIR, BACK_MOTORS_ENABLE, false);
 Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE, true);
 HCSR04 hc(HC_TRIGGER, HC_ECHO);
 
-
-
 Robot robot(fl, fr, br, bl);
 
 void setup() {

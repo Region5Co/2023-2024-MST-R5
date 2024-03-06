@@ -15,8 +15,8 @@ Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
 //
 void Robot::init() {
   fl.init();
-  fr.init();
-  br.init();
+  this->fr.init();
+  this->br.init();
   bl.init();
 }
 

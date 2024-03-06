@@ -11,10 +11,10 @@ class Motor {
     void setReversed(bool reversed);
     void stop();
     void run(int velocity);
-
+  
+    int pwmPin;
   private:  
     Motor();
-    int pwmPin;
     int dirPin;
     int enPin;
     bool reversed;

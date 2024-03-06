@@ -1,14 +1,13 @@
 #include "Motor.h"
-
+#include "Arduino.h"
 
 //@brief Motor class for "null" motor used for testing
 //
 Motor::Motor() {
   pwmPin = -1;
   dirPin = -1;
-  reversed = false;
+  reversed = true;
 }
-
 
 
 
@@ -28,9 +27,9 @@ Motor::Motor(int pwm, int dir, int en, bool rev) {
 //@brief Initializes control pins by turning respectives ports to outputs
 //
 void Motor::init() {
-  pinMode(pwmPin, OUTPUT);
-  pinMode(dirPin, OUTPUT);
-  pinMode(enPin,  OUTPUT);
+  pinMode(this->pwmPin, OUTPUT);
+  pinMode(this->dirPin, OUTPUT);
+  pinMode(this->enPin,  OUTPUT);
 }
 
 //@brief Sets speed of the pwmPin or enable of the motor

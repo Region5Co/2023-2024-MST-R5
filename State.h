@@ -3,14 +3,14 @@
 
 #define MAX_NODES 3
 
-typedef bool (*Transistion)(); //in the parenthesis add any parameters to pass in all transitions
+typedef bool (*Trigger)(); //in the parenthesis add any parameters to pass in all transitions
 
 class State{
 friend class StateMachine;
 public:
     typedef struct trans_node{
         State* state;       // pointer to state to goto
-        Transistion* trans; //function pointer
+        Trigger* trans; //function pointer
     } trans_node;
 
     State(trans_node transitions[]);
@@ -23,10 +23,5 @@ private:
 
 
 };
-
-
-
-
-
 
 #endif

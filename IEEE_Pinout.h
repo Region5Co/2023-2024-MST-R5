@@ -19,8 +19,8 @@
 
 #define FRONT_MOTORS_ENABLE   D0
 #define BACK_MOTORS_ENABLE    D0
-#define FRONT_RIGHT_PWM       D4
-#define FRONT_RIGHT_DIR       D3
+#define FRONT_RIGHT_PWM       D3
+#define FRONT_RIGHT_DIR       D4
 #define FRONT_LEFT_PWM        D7
 #define FRONT_LEFT_DIR        D8
 #define BACK_RIGHT_PWM        D1

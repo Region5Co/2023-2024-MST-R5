@@ -2,9 +2,8 @@
 
 
 State::State(){
-    
-}
 
+}
 
 State::State(trans_node transitions[]){
 

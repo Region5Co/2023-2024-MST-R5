@@ -7,12 +7,19 @@
 class StateMachine {
 
 public:
-    StateMachine();
+    StateMachine(Robot* r);
     State getState();
+
+    void run();
+    void transition(int trigger);
+
+    int scanTriggers();
 private:
-    void setState(State s);
+    void setState(State* s);
+
     
-    State state;
+    Robot* robot;
+    State* state;
 };
 
 

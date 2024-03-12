@@ -44,6 +44,13 @@ void moveUntil(moveDirection dir, int targetDist) {
     robot.drive(dir, 100);
   }
   robot.stop();
+  robot.drive(FORWARD, 100, 1500);
+  robot.drive(BACKWARD, 100, 1500);
+  robot.drive(LEFT, 100, 1500);
+  robot.drive(RIGHT, 100, 1500);
+  robot.turn(CW, 100, 1500);
+  robot.turn(CCW, 100, 1500);
+ 
 }
 
 void moveUntilWithServo(moveDirection dir, int targetDist) {

@@ -1,0 +1,50 @@
+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
+#include <std_msgs/Float32.h>
+  
+//don't believe we doing ros at this point so I could just remove all of that. 
+  
+// Define wheel geometry parameters
+const float WHEEL_SEPARATION_WIDTH = 0.3; // Example value, adjust as needed
+const float WHEEL_SEPARATION_LENGTH = 0.4; // Example value, adjust as needed
+const float WHEEL_GEOMETRY = (WHEEL_SEPARATION_WIDTH + WHEEL_SEPARATION_LENGTH) / 2.0;
+const float WHEEL_RADIUS = 0.1; // Example value, adjust as needed
+
+// ROS publishers for motor commands
+ros::Publisher pub_mfl;
+ros::Publisher pub_mfr;
+ros::Publisher pub_mbl;
+ros::Publisher pub_mbr;
+
+void convert(const geometry_msgs::Twist& move) {
+    float x = move.linear.x;
+    float y = move.linear.y;
+    float rot = move.angular.z;
+
+    float front_left = (x - y - rot * WHEEL_GEOMETRY) / WHEEL_RADIUS;
+    float front_right = (x + y + rot * WHEEL_GEOMETRY) / WHEEL_RADIUS;
+    float back_left = (x + y - rot * WHEEL_GEOMETRY) / WHEEL_RADIUS;
+    float back_right = (x - y + rot * WHEEL_GEOMETRY) / WHEEL_RADIUS;
+
+    pub_mfl.publish(front_left);
+    pub_mfr.publish(front_right);
+    pub_mbl.publish(back_left);
+    pub_mbr.publish(back_right);
+}
+
+int main(int argc, char** argv) {
+    ros::init(argc, argv, "mecanum");
+    ros::NodeHandle nh;
+
+    // Initialize ROS publishers
+    pub_mfl = nh.advertise<std_msgs::Float32>("motor/front/left", 1);
+    pub_mfr = nh.advertise<std_msgs::Float32>("motor/front/right", 1);
+    pub_mbl = nh.advertise<std_msgs::Float32>("motor/rear/left", 1);
+    pub_mbr = nh.advertise<std_msgs::Float32>("motor/rear/right", 1);
+
+    // Subscribe to cmd_vel topic
+    ros::Subscriber sub = nh.subscribe("cmd_vel", 1, convert);
+
+    ros::spin();
+    return 0;
+}

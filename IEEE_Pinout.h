@@ -52,4 +52,6 @@
 #define BACK_LEFT_PWM         D5
 #define BACK_LEFT_DIR         D6
 
+#define IEEE_ACCEL 0 //0 for false, indicating if we are using it
+
 #endif

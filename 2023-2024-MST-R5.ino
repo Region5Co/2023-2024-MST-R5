@@ -46,7 +46,7 @@ void servoTest() {
   delay(750);
 }
 
-void moveUntil(moveDirection dir, int targetDist) {
+void moveUntilLt(moveDirection dir, int targetDist) {
   while (hc.dist() > targetDist) {
     robot.drive(dir, 100);
     delay(50);
@@ -54,12 +54,24 @@ void moveUntil(moveDirection dir, int targetDist) {
   robot.stop();
 }
 
-void moveUntilWithServo(moveDirection dir, int targetDist) { // 90 degree rotation on this lad lmao
+void moveUntilGt(moveDirection dir, int targetDist) {
+  while (hc.dist() < targetDist) {
+    robot.drive(dir, 100);
+    delay(50);
+  }
+  robot.stop();
+}
+
+void moveUntilWithServo(moveDirection dir, int targetDist, bool isLt) { // 90 degree rotation on this lad lmao
   if (dir == FORWARD) {
     myservo.write(180);
   } else if (dir == RIGHT) {
     myservo.write(0);
   }
   delay(15);
-  moveUntil(dir, targetDist);
+  if (isLt) {
+    moveUntilLt(dir, targetDist);
+  } else {
+    moveUntilGt(dir, targetDist);
+  }
 }

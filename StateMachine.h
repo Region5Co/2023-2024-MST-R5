@@ -9,11 +9,12 @@ class StateMachine {
 public:
     StateMachine(Robot* r);
     State getState();
-
+    void init(State* s);
     void run();
     void transition(int trigger);
 
     int scanTriggers();
+
 private:
     void setState(State* s);
 

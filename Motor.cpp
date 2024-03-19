@@ -1,23 +1,15 @@
 #include "Motor.h"
-
+#include "Arduino.h"
 
 //@brief Motor class for "null" motor used for testing
 //
 Motor::Motor() {
   pwmPin = -1;
   dirPin = -1;
-  reversed = false;
+  reversed = true;
 }
 
 
-//@brief Assigns pins to a motor class
-//@param pwmPin is the enable (A or B) pin on the DRV8835 breakoutboard
-//@param dirPin is the phase (A or B) pin on the DRV8835 breakoutboard
-//@param enPin is the Mode pin for A and B on the DRV8835 breakoutboard
-//
-Motor::Motor(int pwmPin, int dirPin, int enPin) {
-  Motor(pwmPin, dirPin, enPin, false);
-}
 
 //@brief Assigns pins to a motor class with option for setting reversed polarity
 //@param pwmPin is the enable (A or B) pin on the DRV8835 breakoutboard
@@ -25,19 +17,19 @@ Motor::Motor(int pwmPin, int dirPin, int enPin) {
 //@param enPin is the Mode pin for A and B on the DRV8835 breakoutboard
 //@param reversed is to setup motor to run in reverse if it is mounted backwards
 //
-Motor::Motor(int pwmPin, int dirPin, int enPin, bool reversed) {
-  this->pwmPin   = pwmPin;
-  this->dirPin   = dirPin;
-  this->enPin    = enPin;
-  this->reversed = reversed;
+Motor::Motor(int pwm, int dir, int en, bool rev) {
+  this->pwmPin   = pwm;
+  this->dirPin   = dir;
+  this->enPin    = en;
+  this->reversed = rev;
 }
 
 //@brief Initializes control pins by turning respectives ports to outputs
 //
 void Motor::init() {
-  pinMode(pwmPin, OUTPUT);
-  pinMode(dirPin, OUTPUT);
-  pinMode(enPin,  OUTPUT);
+  pinMode(this->pwmPin, OUTPUT);
+  pinMode(this->dirPin, OUTPUT);
+  pinMode(this->enPin,  OUTPUT);
 }
 
 //@brief Sets speed of the pwmPin or enable of the motor
@@ -68,19 +60,19 @@ void Motor::stop() {
 //
 void Motor::run(int velocity) {
   if(velocity == 0) {
-    stop();
+    this->stop();
     return;
   }
 
   if(velocity > 0) {
     setSpeed(velocity);
-    digitalWrite(dirPin, reversed);
+    digitalWrite(this->dirPin, this->reversed);
     return;
   }
 
   if(velocity < 0) {
     setSpeed(velocity * -1);
-    digitalWrite(dirPin, !reversed);
+    digitalWrite(this->dirPin, !this->reversed);
     return;
   }
 } 

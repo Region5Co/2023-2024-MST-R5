@@ -26,10 +26,15 @@ void loop() {
   robot.drive(RIGHT, 100, 1500);
   robot.turn(CW, 100, 1500);
   robot.turn(CCW, 100, 1500);*/
-  switch(stage){
-    case 0:
+  int stage;
+  int a,b,c; //desired distance from the wall
+  a = 0; //distance from the right wall
+  b = 0; //distance from wall were facing
+  c = 0; //distance to hit the button?
+  switch(stage){ //make stage variable
+    case 0: //need to get data from ultrasonic sensor (this is psuedocode)
     {
-      if(robot.right_distance >= inches)
+      if(robot.right_distance >= inches) //distances will be read from the sensors, maybe use same variable??
       {
         robot.drive_right(forward);
       }else{
@@ -43,8 +48,7 @@ void loop() {
       if(robot.forward_distance() >= y_inches)
       {
         robot.move(forward);
-      }else
-      {
+      }else{
         robot.stop();
         stage = 2;
       }

@@ -42,30 +42,24 @@ void square() {
 void servoTest() {
   myservo.write(0);
   delay(1500);
-  //myservo.writeMicroseconds(2500);
-  //delay(750);
   myservo.write(180);
   delay(750);
 }
 
 void moveUntil(moveDirection dir, int targetDist) {
-
   while (hc.dist() > targetDist) {
     robot.drive(dir, 100);
     delay(50);
   }
   robot.stop();
-  //robot.drive(FORWARD, 100, 1500);
-  //robot.drive(BACKWARD, 100, 1500);
-  //robot.drive(LEFT, 100, 1500);
-  //robot.drive(RIGHT, 100, 1500);
-  //robot.turn(CW, 100, 1500);
-  //robot.turn(CCW, 100, 1500);
- 
 }
 
-void moveUntilWithServo(moveDirection dir, int targetDist) {
-  //myservo.write(degree);
+void moveUntilWithServo(moveDirection dir, int targetDist) { // 90 degree rotation on this lad lmao
+  if (dir == FORWARD) {
+    myservo.write(180);
+  } else if (dir == RIGHT) {
+    myservo.write(0);
+  }
   delay(15);
   moveUntil(dir, targetDist);
 }

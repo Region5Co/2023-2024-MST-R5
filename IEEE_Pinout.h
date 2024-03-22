@@ -70,8 +70,8 @@
 #define BACK_LEFT_PWM         7
 #define BACK_LEFT_DIR         22
 //gyro
-//#define SCL_GYRO              21
-//#define SDA_GYRO              20
+#define SCL_GYRO              21
+#define SDA_GYRO              20
 //tof
 #define SCL_TOF               21
 #define SDA_TOF               20

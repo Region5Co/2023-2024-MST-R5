@@ -35,6 +35,7 @@ void setup() {
   }
   vl53.setTimingBudget(500);
   vl53.VL53L1X_SetDistanceMode(2);
+  vl53.VL53L1X_SetROI(4, 16);
   Serial.println("Initializing robot");
   robot.init();
 

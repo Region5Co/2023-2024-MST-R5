@@ -80,4 +80,6 @@
 #define HC_ECHO               50
 #define SERVO_PIN             50
 
+#define IEEE_ACCEL 0 //0 for false, indicating if we are using it
+
 #endif

@@ -1,3 +1,4 @@
+#include "src/Adafruit_LSM6DS/Adafruit_LSM6DS3TRC.h"
 #include <Adafruit_VL53L1X.h>
 #include <ComponentObject.h>
 #include <RangeSensor.h>
@@ -11,6 +12,22 @@
 #include <Servo.h>
 
 
+#if !defined(ACCEL_RANGE) && !defined(ACCEL_RATE) && IEEE_ACCEL
+#define ACCEL_RANGE LSM6DS_ACCEL_RANGE_16_G
+#define ACCEL_RATE  LSM6DS_RATE_1_66K_HZ
+#endif
+
+#if !defined(GYRO_RANGE) && !defined(GYRO_RATE)
+#define GYRO_RANGE  LSM6DS_GYRO_RANGE_500_DPS
+#define GYRO_RATE   LSM6DS_RATE_1_66K_HZ
+#endif
+
+//Devices
+Adafruit_LSM6DS3TRC imu;
+
+
+
+//Motors
 Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor fl(FRONT_LEFT_PWM, FRONT_LEFT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor br(BACK_RIGHT_PWM, BACK_RIGHT_DIR, BACK_MOTORS_ENABLE, false);
@@ -22,8 +39,25 @@ Adafruit_VL53L1X vl53 = Adafruit_VL53L1X();
 Robot robot(fl, fr, br, bl);
 
 void setup() {
+
   Serial.begin(115200);
-  while (!Serial) delay(10);
+  while(!Serial) delay(10);
+
+
+  //Imu initialization
+  if(!imu.begin_I2C()){
+    Serial.println("ERROR Initializing I2C for IMU");
+  }
+  /*Not using the accelerometer*/
+  //imu.setAccelRange(ACCEL_RANGE);
+  //imu.setAccelDataRate(ACCEL_RATE);
+  imu.setGyroRange(GYRO_RANGE);
+  imu.setGyroDataRate(GYRO_RATE);
+  //have to check this portion
+  //not using Accel.
+  //imu.configInt1(false, false, true); // accelerometer DRDY on INT1 of the imu
+  imu.configInt1(false, true, false); // gyro DRDY on INT1 of the imu
+
   Wire.begin();
   if (!vl53.begin(0x29, &Wire)) {
     Serial.print(F("Error on init"));
@@ -38,66 +72,26 @@ void setup() {
   vl53.VL53L1X_SetROI(4, 16);
   Serial.println("Initializing robot");
   robot.init();
+  //robot.addIMU(imu) //to be added
 
   myservo.attach(SERVO_PIN);
 }
 
 void loop() {
-  //testUltra();
-  //servoTest();
-  int16_t distance;
-
-  if (vl53.dataReady()) {
-    distance = vl53.distance();
-    Serial.println(distance);
-  }
-  //square();
+  float x = getGyroX(&imu);
+  Serial.println(x);
+  //robot.drive(FORWARD, 70, 1500);
+  //robot.drive(BACKWARD, 70, 1500);
+  //robot.drive(LEFT, 70, 1500);
+  //robot.drive(RIGHT, 70, 1500);
+  //robot.turn(CW, 70, 1500);
+  //robot.turn(CCW, 70, 1500);
+ 
 }
 
-void testUltra() {
-  Serial.println(hc.dist());
+float getGyroX(Adafruit_LSM6DS3TRC* gyro){
+  sensors_event_t e;
+  gyro->getEvent(nullptr, &e, nullptr);
+  return e.gyro.z;
 }
 
-void square() {
-  robot.drive(FORWARD, 100, 1000);
-  robot.drive(RIGHT, 100, 1000);
-  robot.drive(BACKWARD, 100, 1000);
-  robot.drive(LEFT, 100, 1000);
-}
-
-void servoTest() {
-  myservo.write(0);
-  delay(1500);
-  myservo.write(180);
-  delay(750);
-}
-
-void moveUntilLt(moveDirection dir, int targetDist) {
-  while (hc.dist() > targetDist) {
-    robot.drive(dir, 100);
-    delay(50);
-  }
-  robot.stop();
-}
-
-void moveUntilGt(moveDirection dir, int targetDist) {
-  while (hc.dist() < targetDist) {
-    robot.drive(dir, 100);
-    delay(50);
-  }
-  robot.stop();
-}
-
-void moveUntilWithServo(moveDirection dir, int targetDist, bool isLt) { // 90 degree rotation on this lad lmao
-  if (dir == FORWARD) {
-    myservo.write(180);
-  } else if (dir == RIGHT) {
-    myservo.write(0);
-  }
-  delay(15);
-  if (isLt) {
-    moveUntilLt(dir, targetDist);
-  } else {
-    moveUntilGt(dir, targetDist);
-  }
-}

@@ -1,8 +1,15 @@
+#include <Adafruit_VL53L1X.h>
+#include <ComponentObject.h>
+#include <RangeSensor.h>
+#include <vl53l1x_class.h>
+#include <vl53l1x_error_codes.h>
+
 
 #include "Robot.h"
 #include "IEEE_Pinout.h"
 #include "HCSR04.h"
 #include <Servo.h>
+
 
 Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor fl(FRONT_LEFT_PWM, FRONT_LEFT_DIR, FRONT_MOTORS_ENABLE, false);
@@ -10,12 +17,25 @@ Motor br(BACK_RIGHT_PWM, BACK_RIGHT_DIR, BACK_MOTORS_ENABLE, false);
 Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE, true);
 HCSR04 hc(HC_TRIGGER, HC_ECHO);
 Servo myservo;
+Adafruit_VL53L1X vl53 = Adafruit_VL53L1X();
 
 Robot robot(fl, fr, br, bl);
 
 void setup() {
-  //Serial.begin(9600);
-  //Serial.println("Initializing");
+  Serial.begin(115200);
+  while (!Serial) delay(10);
+  Wire.begin();
+  if (!vl53.begin(0x29, &Wire)) {
+    Serial.print(F("Error on init"));
+    Serial.println(vl53.vl_status);
+  }
+  if (! vl53.startRanging()) {
+    Serial.print(F("sucks at ranging"));
+    Serial.println(vl53.vl_status);
+  }
+  vl53.setTimingBudget(500);
+  vl53.VL53L1X_SetDistanceMode(2);
+  Serial.println("Initializing robot");
   robot.init();
 
   myservo.attach(SERVO_PIN);
@@ -24,8 +44,13 @@ void setup() {
 void loop() {
   //testUltra();
   //servoTest();
+  int16_t distance;
+
+  if (vl53.dataReady()) {
+    distance = vl53.distance();
+    Serial.println(distance);
+  }
   //square();
-  moveUntil(FORWARD, 50);
 }
 
 void testUltra() {

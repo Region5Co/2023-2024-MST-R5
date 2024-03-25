@@ -1,5 +1,5 @@
 #include "StateMachine.h"
-#include "State.h"
+#include "State.hpp"
 #include "Robot.h"
 
 
@@ -7,13 +7,15 @@ StateMachine::StateMachine(Robot *r){
     this->robot = r;
 }
 
-State StateMachine::getState(){
-    return State();
+State* StateMachine::getState(){
+    return this->state;
 }
 
 void StateMachine::init(State *s)
 {
-    this->state = s;
+    state = s;
+    Serial.println("State Assigned");
+    delay(100);
 }
 
 void StateMachine::setState(State* s){
@@ -22,33 +24,13 @@ void StateMachine::setState(State* s){
 
 void StateMachine::run(){
     state->execute();
+    Serial.println("State Executing: "+state->name);
+    delay(100);
 }   
 
 void StateMachine::transition(int trigger){
     state->end();
-    setState(state->nodes[trigger].next_state);
+    Serial.println("Moving to State: "+state->nodes[trigger+1]->next_state->name);
+    setState((*(state->nodes[trigger])).next_state);
     state->init(robot);
-}
-
-int StateMachine::scanTriggers(){
-    bool multi_trigger = false,
-        triggered=false;
-    int _trigger = -1;
-    for(short i=0; i < sizeof(state->nodes); i++){
-        State::trans_node node = state->nodes[i];
-        bool temp_trigger = triggered;
-        triggered = (*node.trigger)(robot); //this line runs the function
-        if(triggered && temp_trigger){
-            multi_trigger = true;
-        }
-        if(triggered){
-            _trigger = i;
-        }
-    }
-    //return triggered XOR multi_trigger
-    bool _ret = ((!triggered && multi_trigger) || (triggered && !multi_trigger));
-    if(_ret || _trigger == -1){
-        return -1;
-    }
-    return _trigger;
 }

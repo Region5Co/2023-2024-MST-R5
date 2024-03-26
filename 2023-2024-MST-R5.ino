@@ -1,7 +1,6 @@
-
 #include "Robot.h"
 #include "IEEE_Pinout.h"
-#include "Encoder.h"
+
 
 static Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE);
 static Motor fl(FRONT_LEFT_PWM, FRONT_LEFT_DIR, FRONT_MOTORS_ENABLE);

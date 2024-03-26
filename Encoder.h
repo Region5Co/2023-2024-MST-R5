@@ -1,8 +1,9 @@
 #ifndef ENCODER_H
 #define ENCODER_H
 
+#include <Arduino.h>
+
 #define WHEEL_RADIUS 0.935
-#define PI 3.14159265
 
 class Encoder {
 friend class Motor;

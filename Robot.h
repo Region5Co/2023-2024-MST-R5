@@ -1,5 +1,5 @@
-#ifndef Robot_H
-#define Robot_H
+#ifndef ROBOT_H
+#define ROBOT_H
 
 #include <Arduino.h>
 #include "Motor.h"

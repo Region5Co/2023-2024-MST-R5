@@ -1,3 +1,6 @@
+#ifndef TYPES_H_
+#define TYPES_H_
+
 enum class drivetrain {
   mecanum,
   twoWheel
@@ -21,3 +24,5 @@ enum class WHEEL{
   BACK_LEFT,
   BACK_RIGHT
 };
+
+#endif

@@ -14,3 +14,10 @@ enum class moveDirection {
   left,
   right
 };
+
+enum class WHEEL{
+  FRONT_LEFT,
+  FRONT_RIGHT,
+  BACK_LEFT,
+  BACK_RIGHT
+};

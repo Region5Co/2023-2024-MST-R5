@@ -1,5 +1,4 @@
 #include "Encoder.h"
-#include "Arduino.h"
 
 //@brief Assigns interrupt and direction pins to an encoder class
 //@param interruptPin is one of the encoder outputs tied to an interrupt pin on the Arduino
@@ -16,7 +15,7 @@ void Encoder::init() {
   //attachInterrupt(digitalPinToInterrupt(this->intPin), interruptEncoder, RISING);
   pinMode(this->intPin, INPUT_PULLUP);
   pinMode(this->dirPin, INPUT);
-  wheelCircum = 2*3.14*0.935;
+  wheelCircum = 2 * PI * WHEEL_RADIUS;
 }
 
 //@brief Gets the raw encoder count from the encoder
@@ -40,7 +39,8 @@ int Encoder::getEncDist(){
 
 //Not tested...
 float Encoder::getRPM(){
-  return ((currTime-lastTime)*60000000)/358;
+  RPM = ((currTime-lastTime)*60000000)/358;
+  return this->RPM;
 }
 
 //@brief Increments or decrements the total encoder count based on the direction of rotation
@@ -54,3 +54,4 @@ void Encoder::incEncCount(){
   }
   lastTime = currTime;
 }
+

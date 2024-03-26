@@ -32,12 +32,26 @@ Motor::Motor(int pwm, int dir, int en, bool rev):
   reversed(rev){}
 
 
-//@brief Initializes control pins by turning respectives ports to outputs
+//@brief Initializes control pins by turning respectives ports to outputs. Also initializes encoder
 //
 void Motor::init() {
   pinMode(this->pwmPin, OUTPUT);
   pinMode(this->dirPin, OUTPUT);
   pinMode(this->enPin,  OUTPUT);
+  this->encoder->init();
+}
+
+//@brief Designate an encoder to specific Motor
+//@param en the encoder attached to motor. This should be initialized already
+//
+void Motor::attachEncoder(Encoder* en){
+  this->encoder = en;
+}
+
+//@brief Gets encoder attached to motor
+//
+Encoder* Motor::getEncoder(){
+  return this->encoder;
 }
 
 //@brief Sets speed of the pwmPin or enable of the motor
@@ -84,3 +98,8 @@ void Motor::run(int velocity) {
     return;
   }
 } 
+
+float Motor::getAngularVelocity(){
+  this->encoder->angV = (this->encoder->getRPM() * PI) / 60.0; //unit is rad/s
+  return this->encoder->angV;
+}

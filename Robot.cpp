@@ -1,10 +1,11 @@
 #include "Robot.h"
+#include "types.h"
 
 
 //@brief
 //@param fl,fr,br,bl represents motor in respective position 
 //
-Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
+Robot::Robot(Motor* fl, Motor* fr, Motor* br, Motor* bl) {
   this->fl = fl;
   this->fr = fr;
   this->br = br;
@@ -14,30 +15,29 @@ Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
 //@brief Initializes motors for the Robot
 //
 void Robot::init() {
-  fl.init();
-  fr.init();
-  br.init();
-  bl.init();
+  fl->init();
+  fr->init();
+  br->init();
+  bl->init();
 }
-
 
 //@brief Sets the reverses constant for each motor
 //@param fl,fr,br,bl boolean for rather the motor should be reversed 
 //
 void Robot::reverseMotors(bool fl, bool fr, bool br, bool bl) {
-  this->fl.setReversed(fl);
-  this->fr.setReversed(fr);
-  this->br.setReversed(br);
-  this->bl.setReversed(bl);
+  this->fl->setReversed(fl);
+  this->fr->setReversed(fr);
+  this->br->setReversed(br);
+  this->bl->setReversed(bl);
 }
 
 //@brief Stops the Robot motors
 //
 void Robot::stop() {
-  fl.stop();
-  fr.stop();
-  br.stop();
-  bl.stop();
+  fl->stop();
+  fr->stop();
+  br->stop();
+  bl->stop();
 }
 
 //@brief Moves the robot in passed direction with an unanumous speed
@@ -70,10 +70,10 @@ void Robot::drive(moveDirection direction, int speed) {
 //@param fl,fr,br,bl Integer representing velocity ranging [-100,100]
 //
 void Robot::drive(int fl, int fr, int br, int bl) {
-  this->fl.run(fl);
-  this->fr.run(fr);
-  this->br.run(br);
-  this->bl.run(bl);
+  this->fl->run(fl);
+  this->fr->run(fr);
+  this->br->run(br);
+  this->bl->run(bl);
 }
 
 //@brief Moves the robot in passed direction with an unanumous speed
@@ -124,4 +124,17 @@ void Robot::turn(turnDirection direction, int speed, int duration) {
   turn(direction, speed);
   delay(duration);
   stop();
+}
+
+//@brief Returns an attached Motor
+//@param wheel uses WHEEL enum to choose a motor
+//
+Motor* Robot::getMotor(WHEEL wheel){
+  switch(wheel){
+    default:
+    case WHEEL::FRONT_LEFT:  return this->fl; break;
+    case WHEEL::FRONT_RIGHT: return this->fr; break;
+    case WHEEL::BACK_LEFT:   return this->br; break;
+    case WHEEL::BACK_RIGHT:  return this->br; break;
+  };
 }

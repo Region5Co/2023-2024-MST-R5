@@ -5,6 +5,7 @@
 #include "Motor.h"
 #include "types.h"
 
+
 #define MECANUM drivetrain::mecanum
 #define TWO_WHEEL drivetrain::twoWheel
 
@@ -17,8 +18,9 @@
 #define CCW turnDirection::ccw
 
 class Robot {
+friend class Odometry;
   public:
-    Robot(Motor fl, Motor fr, Motor br, Motor bl);
+    Robot(Motor* fl, Motor* fr, Motor* br, Motor* bl);
 
     void init();
 
@@ -33,12 +35,10 @@ class Robot {
 
     void turn(turnDirection direction, int speed);
     void turn(turnDirection direction, int speed, int duration);
-
+    Motor* getMotor(WHEEL);
   private:
-    Motor fl;
-    Motor fr;
-    Motor br;
-    Motor bl;
+    Motor *fl, *fr, *br, *bl;
+
 };
 
 #endif

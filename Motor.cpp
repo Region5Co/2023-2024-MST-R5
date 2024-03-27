@@ -38,7 +38,10 @@ void Motor::init() {
   pinMode(this->pwmPin, OUTPUT);
   pinMode(this->dirPin, OUTPUT);
   pinMode(this->enPin,  OUTPUT);
-  this->encoder->init();
+  
+  #if ENCODER_ENABLE
+    this->encoder->init();
+  #endif
 }
 
 //@brief Designate an encoder to specific Motor

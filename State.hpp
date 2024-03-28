@@ -31,7 +31,8 @@ public:
 
     //Name of State - used for debugging
     String name;
-private:
+protected:
+    Robot* robot;
 };
 
 

@@ -11,19 +11,18 @@ Motor br(BACK_RIGHT_PWM, BACK_RIGHT_DIR, BACK_MOTORS_ENABLE, false);
 Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE, true);
 
 //IMU
-Gyro gyro;
+Gyro gyro(false,true);
 Robot robot(fl, fr, br, bl);
 
 void setup() {
   gyro = Gyro(false,true);
   Serial.begin(115200);
   while(!Serial) delay(10);
-  gyro.init();
-  gyro.calibrate();
 
   Serial.println("Initializing");
-  robot.init();
+  
   robot.addIMU(&gyro); //to be added
+  robot.init();
 }
 
 void loop() {

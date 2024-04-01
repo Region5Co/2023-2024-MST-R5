@@ -125,3 +125,11 @@ void Robot::turn(turnDirection direction, int speed, int duration) {
   delay(duration);
   stop();
 }
+
+void Robot::addIMU(Gyro* _imu){
+  this->imu = _imu;
+}
+
+float Robot::getAngle(){
+  return this->imu->getGyroZ();
+}

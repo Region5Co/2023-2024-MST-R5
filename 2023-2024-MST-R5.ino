@@ -16,9 +16,14 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Initializing");
   robot.init();
+  robot.addIMU(&gyro); //to be added
 }
 
 void loop() {
+  gyro.update();
+  Serial.println(robot.getAngle());
+  delay(10);
+
   robot.drive(FORWARD, 100, 1500);
   robot.drive(BACKWARD, 100, 1500);
   robot.drive(LEFT, 100, 1500);

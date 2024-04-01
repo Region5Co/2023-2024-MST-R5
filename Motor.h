@@ -3,8 +3,7 @@
 class Motor {
   friend class Robot;
   public:
-    Motor(int pwmPin, int dirPin, int enPin);
-    Motor(int pwmPin, int dirPin, int enPin, bool reversed);
+    Motor(int pwm, int dir, int en, bool rev);
 
     void init();
 

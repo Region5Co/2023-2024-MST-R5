@@ -1,6 +1,5 @@
 #ifndef IEEE_PINOUT_H
 
-
 #define D0   0
 #define D1   1
 #define D2   2
@@ -49,8 +48,5 @@
 #define BACK_LEFT_PWM         D7
 #define BACK_LEFT_DIR         D22
 
-
-
-#define IEEE_ACCEL 0 //0 for false, indicating if we are using it
 
 #endif

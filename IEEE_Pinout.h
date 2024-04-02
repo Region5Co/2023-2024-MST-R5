@@ -1,4 +1,5 @@
 #ifndef IEEE_PINOUT_H
+#define IEEE_DEBUG false
 
 #define D0   0
 #define D1   1
@@ -37,8 +38,12 @@
 #define D30  30 
 #define D31  31  
  
-#define FRONT_MOTORS_ENABLE   D23
-#define BACK_MOTORS_ENABLE    D23
+#if IEEE_DEBUG
+    #define IEEE_SERIAL 1
+#endif
+
+#define FRONT_MOTORS_ENABLE   D0
+#define BACK_MOTORS_ENABLE    D0
 #define FRONT_RIGHT_PWM       D4
 #define FRONT_RIGHT_DIR       D28
 #define FRONT_LEFT_PWM        D6
@@ -47,6 +52,9 @@
 #define BACK_RIGHT_DIR        D26
 #define BACK_LEFT_PWM         D7
 #define BACK_LEFT_DIR         D22
+
+#define IEEE_B0               A1 //Test for uno
+#define IEEE_B1               A0 //Test for uno
 
 
 #endif

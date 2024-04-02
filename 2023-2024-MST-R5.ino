@@ -8,11 +8,15 @@
 #include "States/Solid.hpp"
 
 //Motor Initializations
+
+//Motors
 Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor fl(FRONT_LEFT_PWM, FRONT_LEFT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor br(BACK_RIGHT_PWM, BACK_RIGHT_DIR, BACK_MOTORS_ENABLE, false);
 Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE, true);
 
+//IMU
+Gyro gyro(false,true);
 //Robot Initialization
 Robot robot(fl, fr, br, bl);
 
@@ -32,6 +36,13 @@ static State::trans_node blink_nodes[MAX_NODES];
 
 
 void setup() {
+  gyro = Gyro(false,true);
+  Serial.begin(115200);
+  while(!Serial) delay(10);
+
+  Serial.println("Initializing");
+  
+  robot.addIMU(&gyro); //to be added
 
   #ifdef IEEE_SERIAL
     Serial.begin(115200);
@@ -89,6 +100,17 @@ void setup() {
 }
 
 void loop() {
+  gyro.update();
+  Serial.println(robot.getAngle());
+  delay(10);
+
+  robot.drive(FORWARD, 100, 1500);
+  robot.drive(BACKWARD, 100, 1500);
+  robot.drive(LEFT, 100, 1500);
+  robot.drive(RIGHT, 100, 1500);
+  robot.turn(CW, 100, 1500);
+  robot.turn(CCW, 100, 1500);
+
   machina.run();  //Execute Current state execution  
   State* curr_state = machina.getState();    //Grab current state from State Machine 
   int trigger = scanTriggers(curr_state);    //scan through triggers of current state

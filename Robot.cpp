@@ -15,9 +15,11 @@ Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
 //
 void Robot::init() {
   fl.init();
-  this->fr.init();
-  this->br.init();
+  fr.init();
+  br.init();
   bl.init();
+  imu->init();
+  imu->calibrate();
 }
 
 
@@ -124,4 +126,12 @@ void Robot::turn(turnDirection direction, int speed, int duration) {
   turn(direction, speed);
   delay(duration);
   stop();
+}
+
+void Robot::addIMU(Gyro* _imu){
+  this->imu = _imu;
+}
+
+float Robot::getAngle(){
+  return this->imu->getGyroZ();
 }

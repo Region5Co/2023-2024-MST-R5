@@ -56,5 +56,6 @@
 #define IEEE_B0               A1 //Test for uno
 #define IEEE_B1               A0 //Test for uno
 
+#define SERVO_PIN             50
 
 #endif

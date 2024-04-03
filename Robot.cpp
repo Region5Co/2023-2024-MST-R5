@@ -9,6 +9,7 @@ Robot::Robot(Motor fl, Motor fr, Motor br, Motor bl) {
   this->fr = fr;
   this->br = br;
   this->bl = bl;
+  this->target_angle =0.0;
 }
 
 //@brief Initializes motors for the Robot

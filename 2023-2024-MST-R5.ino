@@ -136,6 +136,7 @@ void setup() {
 
 
   Serial.println("Initializing robot");
+  robot.addIMU(*gyro);
   robot.init();
   myservo.attach(SERVO_PIN);
   //Initialize State Machine

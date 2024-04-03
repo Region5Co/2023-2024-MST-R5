@@ -104,9 +104,6 @@ void setup() {
 
   //robot init
 
-  Serial.begin(115200);
-  while(!Serial) delay(10);
-
   //Imu initialization
   if(!imu.begin_I2C()){
     Serial.println("ERROR Initializing I2C for IMU");

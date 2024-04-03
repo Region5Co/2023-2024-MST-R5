@@ -41,6 +41,7 @@ class Robot {
     Motor br;
     Motor bl;
     Gyro* imu;
+    float target_angle;
 };
 
 #endif

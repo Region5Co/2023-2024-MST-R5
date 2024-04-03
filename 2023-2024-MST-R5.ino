@@ -29,9 +29,7 @@
 #include "StateMachine.h"
 #include "State.hpp"
 #include "Triggers.h"
-#include "States/FadeState.hpp"
-#include "States/Blink.hpp"
-#include "States/Solid.hpp"
+#include "States/Init.hpp"
 
 #if !defined(ACCEL_RANGE) && !defined(ACCEL_RATE) && IEEE_ACCEL
 #define ACCEL_RANGE LSM6DS_ACCEL_RANGE_16_G
@@ -64,7 +62,16 @@ Robot robot(fl, fr, br, bl);
 StateMachine machina(&robot);
  
 //State Pointers
-State* fade;
+State* inti;
+InitState i;
+
+//Node array init
+static State::trans_node init_nodes[MAX_NODES];
+static State::trans_node traverse_nodes[MAX_NODES];
+static State::trans_node orient_nodes[MAX_NODES];
+
+
+
 
 void triggers(void*);
 void updater(void* pvParamaters);
@@ -77,6 +84,7 @@ void setup() {
     Serial.println("In Setup");
   #endif
   
+  i=InitState();
   xTaskCreate(
     updater
     , "Update Loop" // A name just for humans
@@ -138,6 +146,7 @@ void setup() {
   myservo.attach(SERVO_PIN);
   //Initialize State Machine
   machina.init(fade);
+
 }
 
 void loop() {

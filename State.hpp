@@ -17,7 +17,7 @@ public:
         Trigger trigger;        //function pointer
     } trans_node;
 
-    virtual int init(Robot*) =0;
+    virtual int init(Robot*)   =0;
     virtual int execute()      =0;
     virtual int end()          =0;
     

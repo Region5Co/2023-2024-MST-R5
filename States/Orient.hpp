@@ -1,5 +1,5 @@
-#ifndef INIT_STATE_H
-#define INIT_STATE_H
+#ifndef ORIENT_STATE_H
+#define ORIENT_STATE_H
 
 #include "../Robot.h"
 #include "../State.hpp"
@@ -12,12 +12,14 @@ public:
 
     int execute();
     int end();
+
+    float targetAngle;
 };
 
 /*
 * @brief Initializer takes no parameters
 */
-OrientState::OrientState(){ name = "Init";};
+OrientState::OrientState(){ name = "Orient";};
 
 /*
 * @brief Initialize state with nodes
@@ -25,7 +27,7 @@ OrientState::OrientState(){ name = "Init";};
 * @param s the size of @ref nodes[] 
 */
 OrientState::OrientState(State::trans_node _nodes[],int s){
-    name="Init";
+    name="Orient";
     this->size = s;
 
     //Adding nodes to class
@@ -41,6 +43,7 @@ OrientState::OrientState(State::trans_node _nodes[],int s){
 */
 int OrientState::init(Robot* r){
     this->robot = r;
+    this->targetAngle = 10;
     return 0;
 }
 
@@ -49,19 +52,7 @@ int OrientState::init(Robot* r){
 */
 int OrientState::execute(){
     //Initilize
-    #if ENCODERS_ENABLE  
-        //Attach Encoders to Motors
-        fl.attachEncoder(&encFL);
-        fr.attachEncoder(&encFR);
-        bl.attachEncoder(&encBL);
-        br.attachEncoder(&encBR);
-
-        //Setup Interrupts
-        attachInterrupt(digitalPinToInterrupt(encFL.getEncIntPin()), interruptEncoderFL, RISING);
-        attachInterrupt(digitalPinToInterrupt(encFR.getEncIntPin()), interruptEncoderFR, RISING);
-        attachInterrupt(digitalPinToInterrupt(encBL.getEncIntPin()), interruptEncoderBL, RISING);
-        attachInterrupt(digitalPinToInterrupt(encBR.getEncIntPin()), interruptEncoderBR, RISING);
-    #endif
+    
 
     robot->init();
 

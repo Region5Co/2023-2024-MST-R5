@@ -26,11 +26,15 @@
 #include "States/Solid.hpp"
 
 //Motor Initializations
+
+//Motors
 Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor fl(FRONT_LEFT_PWM, FRONT_LEFT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor br(BACK_RIGHT_PWM, BACK_RIGHT_DIR, BACK_MOTORS_ENABLE, false);
 Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE, true);
 
+//IMU
+Gyro gyro(false,true);
 //Robot Initialization
 Robot robot(fl, fr, br, bl);
 
@@ -45,12 +49,13 @@ void updater(void* pvParamaters);
 void run(void* pvParameters);
 
 void setup() {
-
+ 
   #ifdef IEEE_SERIAL
     Serial.begin(115200);
     Serial.println("In Setup");
   #endif
   
+
   xTaskCreate(
     updater
     , "Update Loop" // A name just for humans
@@ -72,7 +77,6 @@ void setup() {
     , NULL
     , 3        // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     , NULL );
- 
   #ifdef IEEE_SERIAL
     Serial.println("Leaving setup");
   #endif

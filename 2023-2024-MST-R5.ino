@@ -1,3 +1,21 @@
+#include <Arduino_FreeRTOS.h>
+#include <atomic.h>
+#include <event_groups.h>
+#include <FreeRTOSConfig.h>
+#include <FreeRTOSVariant.h>
+#include <list.h>
+#include <message_buffer.h>
+#include <mpu_wrappers.h>
+#include <portable.h>
+#include <portmacro.h>
+#include <projdefs.h>
+#include <queue.h>
+#include <semphr.h>
+#include <stack_macros.h>
+#include <stream_buffer.h>
+#include <task.h>
+#include <timers.h>
+
 #include "IEEE_Pinout.h"
 #include "Robot.h"
 #include "StateMachine.h"
@@ -25,15 +43,10 @@ StateMachine machina(&robot);
  
 //State Pointers
 State* fade;
-State* solid;
-State* blink;
 
-//Node array init
-static State::trans_node fade_nodes[MAX_NODES];
-static State::trans_node solid_nodes[MAX_NODES];
-static State::trans_node blink_nodes[MAX_NODES];
- 
-
+void triggers(void*);
+void updater(void* pvParamaters);
+void run(void* pvParameters);
 
 void setup() {
  
@@ -42,72 +55,62 @@ void setup() {
     Serial.println("In Setup");
   #endif
   
-  //robot init
-  robot.addIMU(&gyro); //to be added
-  robot.init();
 
-  //Setup pins for test state machine
-  pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(IEEE_B0, INPUT);
-  pinMode(IEEE_B1, INPUT);
-  
-  /**Create static States**/
-  static FadeState  f;
-  static BlinkState b;
-  static SolidState s;
-
-	/** Create Nodes to link to states**/
-  //Nodes for Fadestate
-	static State::trans_node fade_to_solid  = {&s, (Trigger)b0};
-  fade_nodes[0] = fade_to_solid;
-
-  //Nodes for SolidState
-	static State::trans_node solid_to_fade  = {&f, (Trigger)b1};
-	static State::trans_node solid_to_blink = {&b, (Trigger)b0};
-	solid_nodes[1] = solid_to_fade;
-	solid_nodes[0] = solid_to_blink;
-
-  //Nodes for BlinkState
-	const State::trans_node blink_to_fade  = {&f, (Trigger)b0};
-	const State::trans_node blink_to_solid = {&s, (Trigger)b1};
-	blink_nodes[0] = blink_to_fade;
-	blink_nodes[1] = blink_to_solid;
-
-  //Re-initialize States with nodes
-  f = FadeState(fade_nodes,0);
-  b = BlinkState(blink_nodes,1);
-  s = SolidState(solid_nodes,1);
-
-  //Assign states to pointers
-  fade  = &f;
-  blink = &b;
-  solid = &s;
- 
+  xTaskCreate(
+    updater
+    , "Update Loop" // A name just for humans
+    , 128      // This stack size can be checked and adjusted by reading the Stack Highwater
+    , NULL
+    , 2        // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    , NULL );
+   xTaskCreate(
+    triggers
+    , "Trigger Loop" // A name just for humans
+    , 64      // This stack size can be checked and adjusted by reading the Stack Highwater
+    , NULL
+    , 3        // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    , NULL );
+    xTaskCreate(
+    run
+    , "Run Loop" // A name just for humans
+    , 128      // This stack size can be checked and adjusted by reading the Stack Highwater
+    , NULL
+    , 3        // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    , NULL );
   #ifdef IEEE_SERIAL
     Serial.println("Leaving setup");
   #endif
-  delay(1000);
-  
+
+  //robot init
+  robot.init();
   //Initialize State Machine
-  machina.init(&f);
+  machina.init(fade);
 
 }
 
 void loop() {
-  machina.run();  //Execute Current state execution  
-  State* curr_state = machina.getState();    //Grab current state from State Machine 
-  int trigger = scanTriggers(curr_state);    //scan through triggers of current state
-
+  
   #ifdef IEEE_SERIAL
     Serial.println("Trigger: "+(String)trigger);
   #endif
+}
+ 
+void updater(void*){
 
+}
+
+
+void run(void*){
+  machina.run();  //Execute Current state execution  
+}
+
+
+void triggers(void*){
+  State* curr_state = machina.getState();    //Grab current state from State Machine 
+  int trigger = scanTriggers(curr_state);    //scan through triggers of current state
   if(trigger != -1){
     machina.transition(trigger);
   }
-
-  delay(50);
- 
 }
 
 int scanTriggers(State* state){
@@ -140,4 +143,3 @@ int scanTriggers(State* state){
   // }
   return _trigger;
 }
-

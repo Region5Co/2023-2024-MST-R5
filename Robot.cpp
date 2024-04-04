@@ -54,11 +54,11 @@ void Robot::drive(moveDirection direction, int speed) {
         drive(-speed, -speed, -speed, -speed);
         break;
         
-      case LEFT:
+      case RIGHT:
         drive(-speed, speed, -speed, speed);
         break;
 
-      case RIGHT:
+      case LEFT:
         drive(speed, -speed, speed, -speed);
         break;
       default:

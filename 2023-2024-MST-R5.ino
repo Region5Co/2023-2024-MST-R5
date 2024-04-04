@@ -49,7 +49,7 @@ void loop() {
     case 2:
     {
       moveUntilWithServo(LEFT, c, false);
-      robot.drive(FORWARD, 100, 1000); /* will need to test this value. Likely should use the encoders to verify
+      robot.drive(FORWARD, 100, 1000); /* will need to test this value. Likely should use the encoders to verify*/
       stage = 3;
       break;
     }
@@ -58,7 +58,7 @@ void loop() {
       robot.drive(BACKWARD,100,500);
       robot.drive(CW,100,1500);
       stage = 0;
-      /* here would just need to back up a small bit
+      /* here would just need to back up a small bit*/
         
     
   }

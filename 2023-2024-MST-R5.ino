@@ -1,8 +1,8 @@
 
 #include "Robot.h"
 #include "IEEE_Pinout.h"
-#include "HCSR04.h"
 #include <Servo.h>
+#include <RangeSensor.h>
 
 #include <vl53l1x_class.h>
 #include <vl53l1x_error_codes.h>
@@ -65,10 +65,18 @@ void loop() {
     case 2:
     {
       moveUntilWithServo(LEFT, c, false);
-      robot.drive(FORWARD, 100, 1000);
+      robot.drive(FORWARD, 100, 1000); /* will need to test this value. Likely should use the encoders to verify*/
       stage = 3;
       break;
     }
+    case 4: 
+    {
+      robot.drive(BACKWARD,100,500);
+      robot.drive(CW,100,1500);
+      stage = 0;
+      /* here would just need to back up a small bit*/
+        
+    
   }
 }
 
@@ -91,7 +99,7 @@ void servoTest() {
 }
 
 void moveUntilLt(moveDirection dir, int targetDist) {
-  while (hc.dist() > targetDist) {
+  while (vl53.dist() > targetDist) {
     robot.drive(dir, 100);
     delay(50);
   }
@@ -99,7 +107,7 @@ void moveUntilLt(moveDirection dir, int targetDist) {
 }
 
 void moveUntilGt(moveDirection dir, int targetDist) {
-  while (hc.dist() < targetDist) {
+  while (vl53.dist() < targetDist) {
     robot.drive(dir, 100);
     delay(50);
   }

@@ -83,7 +83,7 @@ void servoTest() {
 }
 
 void moveUntilLt(moveDirection dir, int targetDist) {
-  while (hc.dist() > targetDist) {
+  while (vl53.dist() > targetDist) {
     robot.drive(dir, 100);
     delay(50);
   }
@@ -91,7 +91,7 @@ void moveUntilLt(moveDirection dir, int targetDist) {
 }
 
 void moveUntilGt(moveDirection dir, int targetDist) {
-  while (hc.dist() < targetDist) {
+  while (vl53.dist() < targetDist) {
     robot.drive(dir, 100);
     delay(50);
   }

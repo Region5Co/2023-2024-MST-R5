@@ -1,8 +1,8 @@
 
 #include "Robot.h"
 #include "IEEE_Pinout.h"
-#include "HCSR04.h"
 #include <Servo.h>
+#include <RangeSensor.h>
 
 Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor fl(FRONT_LEFT_PWM, FRONT_LEFT_DIR, FRONT_MOTORS_ENABLE, false);

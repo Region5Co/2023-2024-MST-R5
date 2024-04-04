@@ -14,6 +14,24 @@ Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE, true);
 Servo myservo;
 Adafruit_VL53L1X vl53 = Adafruit_VL53L1X(21, 20);
 
+Encoder encFL(E_FRONT_LEFT_INT, E_FORNT_LEFT_DIR);
+Encoder encFR(E_FRONT_RIGHT_INT, E_FRONT_RIGHT_DIR);
+Encoder encBL(E_BACK_LEFT_INT, E_BACK_LEFT_DIR);
+Encoder encBR(E_BACK_RIGHT_INT, E_BACK_RIGHT_DIR);
+
+void interruptEncoderFL(){
+  encFL.incEncCount();
+}
+void interruptEncoderFR(){
+  encFR.incEncCount();
+}
+void interruptEncoderBL(){
+  encBL.incEncCount();
+}
+void interruptEncoderBR(){
+  encBR.incEncCount();
+}
+
 Robot robot(fl, fr, br, bl);
 
 void setup() {
@@ -32,6 +50,11 @@ void setup() {
   vl53.setTimingBudget(500);
   vl53.VL53L1X_SetDistanceMode(2);
   vl53.VL53L1X_SetROI(4, 16);
+
+  attachInterrupt(digitalPinToInterrupt(encFL.getEncIntPin()), interruptEncoderFL, RISING);
+  attachInterrupt(digitalPinToInterrupt(encFR.getEncIntPin()), interruptEncoderFR, RISING);
+  attachInterrupt(digitalPinToInterrupt(encBL.getEncIntPin()), interruptEncoderBL, RISING);
+  attachInterrupt(digitalPinToInterrupt(encBR.getEncIntPin()), interruptEncoderBR, RISING);
 
   myservo.attach(SERVO_PIN);
   Serial.begin(9600);

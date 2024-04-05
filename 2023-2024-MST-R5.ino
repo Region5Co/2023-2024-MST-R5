@@ -126,7 +126,7 @@ void setup() {
   vl53.VL53L1X_SetROI(4, 16);
 
     //Imu initialization
-  if(!imu.begin_I2C(0x6B)){
+  if(!imu.begin_I2C(0x6A)){
     Serial.println("ERROR Initializing I2C for IMU");
   }
   /*Not using the accelerometer*/
@@ -243,7 +243,7 @@ void loop() {
       delay(1000);
       robot.drive(BACKWARD,100,750);
       delay(500);
-      robot.turn(CW,70,1200);
+      robot.turn(70, 180);
       delay(500);
 
       stage = 0;
@@ -282,6 +282,8 @@ void moveUntilLt(moveDirection dir, int targetDist) {
     delay(50);
   }*/
 
+  an = gyro.update();
+
   while (revisedDist(vl53.distance()) > targetDist) {
     double n = gyro.update();
   
@@ -292,6 +294,7 @@ void moveUntilLt(moveDirection dir, int targetDist) {
     int speed = 50;
     //Serial.println(gyro.getGyroZ());
     if (dir == FORWARD) {
+      Serial.print("I'm HERE");
       robot.drive(speed,0,(error)*k);
     } else {
       robot.drive(dir, 80);

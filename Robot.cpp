@@ -155,6 +155,16 @@ void Robot::turn(turnDirection direction, int speed, int duration) {
   stop();
 }
 
+void Robot::turn(float rotation, float desired_angle){
+    rotation = (abs(getAngle()-desired_angle)>=180)? 1:-1;
+    rotation= 1-getAngle()/desired_angle;
+    Serial.println(rotation);
+    float kp = 1.9;
+    rotation *= (abs(rotation)<10)?0:kp;
+    drive(0,0,rotation);
+
+}
+
 float Robot::Get_X_Pos(){
   return fl->getEncoder()->getEncCount();
 }
@@ -199,10 +209,4 @@ void Robot::addIMU(Gyro* _imu){
 
 float Robot::getAngle(){
   return this->imu->getGyroZ();
-}
-
-void Robot::turn(float rotation, float desired_angle){
-  rotation*= ((getAngle()-desired_angle)>=0)? 1:-1;
-  drive(0,0,rotation);
-  
 }

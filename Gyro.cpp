@@ -54,14 +54,15 @@ void Gyro::calibrate(){
 double Gyro::update(){
     float  x,y;
     if(imu.readGyroscope(x,y, gyroZ)){
-        
+
         long currentTime = micros();
         lastInterval = currentTime - lastTime; // expecting this to be ~104Hz +- 4%
         lastTime = currentTime;
         float lastFrequency = (float) 1000000.0 / lastInterval;
         gyroYaw = gyroYaw + (gyroZ / lastFrequency);
-        gyroCorrectedYaw = gyroCorrectedYaw + ((gyroZ - gyroDriftZ) / lastFrequency);
-
+        gyroCorrectedYaw +=  ((gyroZ - gyroDriftZ) / lastFrequency);
+        gyroCorrectedYaw = (gyroCorrectedYaw>=360)? (gyroCorrectedYaw-360):gyroCorrectedYaw;
+        gyroCorrectedYaw = (gyroCorrectedYaw<0)? (gyroCorrectedYaw+360):gyroCorrectedYaw;
     return gyroCorrectedYaw;
     }else return 0.0;
 }

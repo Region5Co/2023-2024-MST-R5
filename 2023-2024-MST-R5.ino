@@ -24,7 +24,7 @@
 #include "States/Init.hpp"
 
 #define MAX_T_INDEX 7
-
+#define TOLERANCE 5.0
 
 /********ROBOT AND DEVICES*************/
 //Devices
@@ -102,28 +102,29 @@ void setup() {
 void loop() {
   double n = gyro.update();
   
-  double error=an-n;
+  double error=60-n;
  
     float k=-3.5;
     float k2 = 1;
     int speed = 50;
     //Serial.println(gyro.getGyroZ());
-    robot.drive(speed,0,(error)*k);
+    //robot.drive(speed,0,(error)*k);
     //delay(100);
     error1=error;
     
+    robot.turn(75,60);
     
     
     //delay(2000);
     //turn 45 degrees CW
-    int current_pos = encoder.getEncDist();
-    int goal = Travese_Nodes[i].ft - current_pos;
-    Serial.println(encoder.getEncDist());
-    i=0;
-    while(encoder.getEncDist()<goal){
-      robot.drive(FORWARD, 60, 1000);
-      //checkObstruction(forward, 200,Travese_Nodes[i].left_right);
-    }
+    //int current_pos = encoder.getEncDist();
+    //int goal = Travese_Nodes[i].ft - current_pos;
+    //Serial.println(encoder.getEncDist());
+    // i=0;
+    // while(encoder.getEncDist()<goal){
+    //   robot.drive(FORWARD, 60, 1000);
+    //   //checkObstruction(forward, 200,Travese_Nodes[i].left_right);
+    // }
     i= (i>=MAX_T_INDEX)? 0: i+1;
   
 }

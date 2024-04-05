@@ -107,6 +107,7 @@ stage = 4;
 void moveForward(moveDirection dir, int targetDist,bool ISLEFT){//julian verify
   int current_pos = encoder.getEncDist();
   int goal = targetDist - current_pos;
+  Serial.println(encoder.getEncDist())
   i=0;
   while(encoder.getEncDist()<goal){
     robot.drive(FORWARD, 60, 1000);
@@ -136,11 +137,8 @@ void checkObstruction(moveDirection dir, int watchArea, ISLEFT) {
 
   if (revisedDist(vl53.distance()) < watchArea ) {
     evade(ISLEFT)
-    }
-    Serial.println(revisedDist(vl53.distance()));
-    Serial.print("moveUntilLt");
-    robot.drive(dir, 100);
-    delay(50);
+    
+  Serial.println(revisedDist(vl53.distance()));
   }
 
 void moveUntilWithServo(moveDirection dir, int targetDist, bool ISLEFT) { // 90 degree rotation on this lad lmao

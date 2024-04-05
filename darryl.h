@@ -1,7 +1,7 @@
 //A-D-H-F-B-G-E-C-A
   {
 
-inlcude "Encoder.h"
+include "Encoder.h"
 Encoder encoder();
 
 switch(stage){ //make stage variable

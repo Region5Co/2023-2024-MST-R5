@@ -31,7 +31,6 @@ Adafruit_LSM6DS3TRC imu;
 //IMU
 Gyro gyro(false,true);
 
-
 Encoder encFL(E_FRONT_LEFT_INT, E_FORNT_LEFT_DIR);
 Encoder encFR(E_FRONT_RIGHT_INT, E_FRONT_RIGHT_DIR);
 Encoder encBL(E_BACK_LEFT_INT, E_BACK_LEFT_DIR);

@@ -117,6 +117,7 @@ void moveForward(moveDirection dir, int targetDist,bool ISLEFT){//julian verify
 int revisedDist(int dist)   {  
     if (dist==-1){
         dist=1000;
+    }
     return dist
 }
 }

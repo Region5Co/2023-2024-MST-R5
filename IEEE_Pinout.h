@@ -1,6 +1,6 @@
 #ifndef IEEE_PINOUT_H
 #define IEEE_PINOUT_H
-#define IEEE_DEBUG false
+#define IEEE_DEBUG true
 
 #define D0   0
 #define D1   1
@@ -60,9 +60,8 @@
 #define D51  51
 #define D52  52 
 #define D53  53 
- 
 #if IEEE_DEBUG
-    #define IEEE_SERIAL 1
+    #define IEEE_SERIAL 0
 #endif
 
 #define FRONT_MOTORS_ENABLE   D0
@@ -88,12 +87,8 @@
 
 #define IEEE_B0               A1 //Test for uno
 #define IEEE_B1               A0 //Test for uno
-
+#define IEEE_US               false
 #define SERVO_PIN             D8
 
-<<<<<<< HEAD
 #endif
-=======
 
-#endif
->>>>>>> 9eafa77a23ef30884a8e2e849e89cd77ec654747

@@ -20,9 +20,12 @@ void Robot::init() {
   fr->init();
   br->init();
   bl->init();
-
   imu->init();
   imu->calibrate();
+  #if IEEE_US
+    us->init();
+  #endif
+ 
 }
 
 //@brief Sets the reverses constant for each motor
@@ -51,6 +54,7 @@ void Robot::stop() {
 void Robot::drive(moveDirection direction, int speed) {
     switch(direction) {
       case FORWARD:
+
         drive(speed, speed, speed, speed);
         break;
 
@@ -69,6 +73,20 @@ void Robot::drive(moveDirection direction, int speed) {
         break;
     }
 }
+
+
+//@brief Moves the robot in passed direction with an unanumous speed
+//@param direction Requires an input of enum @ref moveDirection to go desired direction
+//@param speed An integer ranging from [-100, 100] for all motors
+//
+void Robot::drive(int drive, int strafe, float rotation) {
+    fl->run(drive+strafe+rotation);
+    fr->run(drive-strafe-rotation);
+    bl->run(drive-strafe+rotation);
+    br->run(drive+strafe-rotation);
+}
+
+
 
 //@brief Moves the robot wheels with independent speed values
 //@param fl,fr,br,bl Integer representing velocity ranging [-100,100]
@@ -141,7 +159,7 @@ Motor* Robot::getMotor(WHEEL wheel){
     case WHEEL::BACK_LEFT:   return this->br; break;
     case WHEEL::BACK_RIGHT:  return this->br; break;
   };
-
+}
 void Robot::addIMU(Gyro* _imu){
   this->imu = _imu;
 }

@@ -16,6 +16,8 @@ void Ultrasonic::init(){
             Serial.print(F("Error on addr init"));
             Serial.println(vl53.vl_status);
         #endif
+        Serial.print(F("Error on addr init"));
+        Serial.println(vl53.vl_status);
     }
     if (!vl53.startRanging()) {
         #if IEEE_SERIAL

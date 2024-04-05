@@ -15,20 +15,25 @@ Gyro::Gyro(bool acc_en,bool gyro_en): acc_en(acc_en), gyro_en(gyro_en){
         imu.setGyroRange(GYRO_RANGE);
         imu.setGyroDataRate(GYRO_RATE);
     }
+    
+     gyroZ=0.0;           
+ gyroDriftZ=0.0;    
+  gyroYaw=0.0;       
+  gyroCorrectedYaw=0.0;
 }
 
 void Gyro::init(){
-  //not using Accel.
-  //imu.configInt1(false, false, true); // accelerometer DRDY on INT1 of the imu
-  imu.configInt2(false, true, false); // gyro DRDY on INT1 of the imu
-
+    //not using Accel.
+    //imu.configInt1(false, false, true); // accelerometer DRDY on INT1 of the imu
+    imu.configInt2(false, true, false); // gyro DRDY on INT1 of the imu
+   delay(100);
 }
 
 void Gyro::calibrate(){
     int calibrationCount = 0;
     delay(CALIBRATION_DELAY); // to avoid shakes after pressing reset button
     lastTime = micros();
-    float sumX, sumY, sumZ;
+    float sumX=0, sumY=0, sumZ=0;
     int startTime = millis();
     while (millis() < startTime + CALIBRATION_DELAY) {
         if (update()) { 
@@ -46,10 +51,10 @@ void Gyro::calibrate(){
     
 }
 
-bool Gyro::update(){
+double Gyro::update(){
     float  x,y;
-    if(imu.gyroscopeAvailable()){
-        imu.readGyroscope(x,y,gyroZ);
+    if(imu.readGyroscope(x,y, gyroZ)){
+        
         long currentTime = micros();
         lastInterval = currentTime - lastTime; // expecting this to be ~104Hz +- 4%
         lastTime = currentTime;
@@ -57,10 +62,10 @@ bool Gyro::update(){
         gyroYaw = gyroYaw + (gyroZ / lastFrequency);
         gyroCorrectedYaw = gyroCorrectedYaw + ((gyroZ - gyroDriftZ) / lastFrequency);
 
-    return true;
-    }else return false;
+    return gyroCorrectedYaw;
+    }else return 0.0;
 }
 
 float Gyro::getGyroZ(){
-    return this->gyroCorrectedYaw;
+    return gyroCorrectedYaw;
 }

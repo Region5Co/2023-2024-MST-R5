@@ -49,19 +49,7 @@ int InitState::init(Robot* r){
 */
 int InitState::execute(){
     //Initilize
-    #if ENCODERS_ENABLE  
-        //Attach Encoders to Motors
-        fl.attachEncoder(&encFL);
-        fr.attachEncoder(&encFR);
-        bl.attachEncoder(&encBL);
-        br.attachEncoder(&encBR);
-
-        //Setup Interrupts
-        attachInterrupt(digitalPinToInterrupt(encFL.getEncIntPin()), interruptEncoderFL, RISING);
-        attachInterrupt(digitalPinToInterrupt(encFR.getEncIntPin()), interruptEncoderFR, RISING);
-        attachInterrupt(digitalPinToInterrupt(encBL.getEncIntPin()), interruptEncoderBL, RISING);
-        attachInterrupt(digitalPinToInterrupt(encBR.getEncIntPin()), interruptEncoderBR, RISING);
-    #endif
+  
 
     robot->init();
 

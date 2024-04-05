@@ -1,5 +1,7 @@
-#ifndef TYPES_H_
-#define TYPES_H_
+
+#ifndef IEEE_TYPES_H
+#define IEEE_TYPES_H
+
 
 enum class drivetrain {
   mecanum,
@@ -23,6 +25,13 @@ enum class WHEEL{
   FRONT_RIGHT,
   BACK_LEFT,
   BACK_RIGHT
+};
+
+#endif
+
+enum States{
+  DRIVE,
+  STOP
 };
 
 #endif

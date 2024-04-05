@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "Motor.h"
 #include "types.h"
+#include "Gyro.h"
 
 
 #define MECANUM drivetrain::mecanum
@@ -32,12 +33,16 @@ friend class Odometry;
     void drive(int fl, int fr, int br, int bl);
     void drive(moveDirection direction, int speed, int duration);
     void drive(int fl, int fr, int br, int bl, int duration);
-
+    void addIMU(Gyro*);
     void turn(turnDirection direction, int speed);
     void turn(turnDirection direction, int speed, int duration);
     Motor* getMotor(WHEEL);
   private:
     Motor *fl, *fr, *br, *bl;
+
+    float getAngle();
+    Gyro* imu;
+    float target_angle;
 
 };
 

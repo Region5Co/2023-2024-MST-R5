@@ -10,6 +10,7 @@ Robot::Robot(Motor* fl, Motor* fr, Motor* br, Motor* bl) {
   this->fr = fr;
   this->br = br;
   this->bl = bl;
+  this->target_angle =0.0;
 }
 
 //@brief Initializes motors for the Robot
@@ -19,6 +20,9 @@ void Robot::init() {
   fr->init();
   br->init();
   bl->init();
+
+  imu->init();
+  imu->calibrate();
 }
 
 //@brief Sets the reverses constant for each motor
@@ -137,4 +141,11 @@ Motor* Robot::getMotor(WHEEL wheel){
     case WHEEL::BACK_LEFT:   return this->br; break;
     case WHEEL::BACK_RIGHT:  return this->br; break;
   };
+
+void Robot::addIMU(Gyro* _imu){
+  this->imu = _imu;
+}
+
+float Robot::getAngle(){
+  return this->imu->getGyroZ();
 }

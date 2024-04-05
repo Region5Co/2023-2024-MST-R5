@@ -1,3 +1,8 @@
+
+#ifndef IEEE_TYPES_H
+#define IEEE_TYPES_H
+
+
 enum class drivetrain {
   mecanum,
   twoWheel
@@ -14,3 +19,18 @@ enum class moveDirection {
   left,
   right
 };
+
+enum class WHEEL{
+  FRONT_LEFT,
+  FRONT_RIGHT,
+  BACK_LEFT,
+  BACK_RIGHT
+};
+
+
+enum States{
+  DRIVE,
+  STOP
+};
+
+#endif

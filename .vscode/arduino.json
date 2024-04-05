@@ -1,4 +1,5 @@
 {
     "sketch": "2023-2024-MST-R5.ino",
-    "board": "esp8266:esp8266:generic"
+    "board": "arduino:avr:mega",
+    "port": "COM4"
 }

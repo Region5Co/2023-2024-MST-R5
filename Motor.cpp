@@ -30,8 +30,15 @@ void Motor::init() {
   pinMode(this->pwmPin, OUTPUT);
   pinMode(this->dirPin, OUTPUT);
   pinMode(this->enPin,  OUTPUT);
+
+  #if ENCODER_ENABLE
+    this->encoder->init();
+  #endif
 }
 
+Encoder* Motor::getEncoder(){
+  return this->encoder;
+}
 //@brief Sets speed of the pwmPin or enable of the motor
 //@param speed An integer ranging from 0-100 that will be mapped and fitted to a 8-bit value (0-255)
 //

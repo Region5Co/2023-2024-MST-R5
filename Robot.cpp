@@ -47,19 +47,27 @@ void Robot::stop() {
 void Robot::drive(moveDirection direction, int speed) {
     switch(direction) {
       case FORWARD:
-        drive(speed, speed, speed, speed);
+        clearAllEncCount();
+        drive(Kp*speed, Kp*speed, Kp*speed, speed);
+        Update_Pos(FORWARD);
         break;
 
       case BACKWARD:
-        drive(-speed, -speed, -speed, -speed);
+        clearAllEncCount();
+        drive(-Kp*speed, -Kp*speed, -Kp*speed, -speed);
+        Update_Pos(BACKWARD);
         break;
         
       case RIGHT:
-        drive(-speed, speed, -speed, speed);
+        clearAllEncCount();
+        drive(-Kp*speed, Kp*speed, -Kp*speed, speed);
+        Update_Pos(RIGHT);
         break;
 
       case LEFT:
-        drive(speed, -speed, speed, -speed);
+        clearAllEncCount();
+        drive(Kp*speed, -Kp*speed, Kp*speed, -speed);
+        Update_Pos(LEFT);
         break;
       default:
         break;
@@ -104,11 +112,11 @@ void Robot::drive(int fl, int fr, int br, int bl, int duration) {
 void Robot::turn(turnDirection direction, int speed) {
   switch(direction) {
     case CW:
-      drive(speed, -speed, -speed, speed);
+      drive(speed, speed, -speed, -speed);
       break;
 
     case CCW:
-      drive(-speed, speed, speed, -speed);
+      drive(-speed, -speed, speed, speed);
       break;
     default:
       break;
@@ -125,3 +133,30 @@ void Robot::turn(turnDirection direction, int speed, int duration) {
   delay(duration);
   stop();
 }
+
+float Robot::Get_X_Pos(){
+  return fl.getEncoder()->getEncCount();
+}
+
+float Robot::Get_Y_Pos(){
+  return Y_Pos;
+}
+
+void Robot::clearAllEncCount(){
+  fl.getEncoder()->clearEncCount();
+  fr.getEncoder()->clearEncCount();
+  bl.getEncoder()->clearEncCount();
+  br.getEncoder()->clearEncCount();
+}
+
+void Robot::Update_Pos(moveDirection direction){
+  switch(direction){
+    case FORWARD:
+      Y_Pos += (abs(fl.getEncoder()->getEncDist()) + abs(fr.getEncoder()->getEncDist()) + abs(bl.getEncoder()->getEncDist()) + abs(br.getEncoder()->getEncDist()))/4;
+      break;
+    case BACKWARD:
+      Y_Pos -= (abs(fl.getEncoder()->getEncDist()) + abs(fr.getEncoder()->getEncDist()) + abs(bl.getEncoder()->getEncDist()) + abs(br.getEncoder()->getEncDist()))/4;
+      break;
+  }
+}
+

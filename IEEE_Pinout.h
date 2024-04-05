@@ -37,6 +37,28 @@
 #define D29  29 
 #define D30  30 
 #define D31  31  
+#define D32  32  
+#define D33  33  
+#define D34  34  
+#define D35  35  
+#define D36  36  
+#define D37  37  
+#define D38  38  
+#define D39  39  
+#define D40  40  
+#define D41  41  
+#define D42  42  
+#define D43  43  
+#define D44  44  
+#define D45  45 
+#define D46  46 
+#define D47  47  
+#define D48  48 
+#define D49  49 
+#define D50  50 
+#define D51  51
+#define D52  52 
+#define D53  53 
  
 #if IEEE_DEBUG
     #define IEEE_SERIAL 1
@@ -52,6 +74,16 @@
 #define BACK_RIGHT_DIR        D26
 #define BACK_LEFT_PWM         D7
 #define BACK_LEFT_DIR         D22
+
+#define ENCODERS_ENABLE         true
+#define E_FRONT_RIGHT_INT       D3
+#define E_FRONT_RIGHT_DIR       D53
+#define E_FRONT_LEFT_INT        D19
+#define E_FORNT_LEFT_DIR        D49
+#define E_BACK_RIGHT_INT        D2
+#define E_BACK_RIGHT_DIR        D51
+#define E_BACK_LEFT_INT         D18  
+#define E_BACK_LEFT_DIR         D47
 
 #define IEEE_B0               A1 //Test for uno
 #define IEEE_B1               A0 //Test for uno

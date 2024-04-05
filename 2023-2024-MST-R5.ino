@@ -1,4 +1,4 @@
-
+#include "Encoder.h"
 #include "Robot.h"
 #include "IEEE_Pinout.h"
 #include <Servo.h>
@@ -14,11 +14,27 @@ Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE, true);
 Servo myservo;
 Adafruit_VL53L1X vl53 = Adafruit_VL53L1X(21, 20);
 
+Encoder encFL(E_FRONT_LEFT_INT, E_FORNT_LEFT_DIR);
+Encoder encFR(E_FRONT_RIGHT_INT, E_FRONT_RIGHT_DIR);
+Encoder encBL(E_BACK_LEFT_INT, E_BACK_LEFT_DIR);
+Encoder encBR(E_BACK_RIGHT_INT, E_BACK_RIGHT_DIR);
+
+void interruptEncoderFL(){
+  encFL.incEncCount();
+}
+void interruptEncoderFR(){
+  encFR.incEncCount();
+}
+void interruptEncoderBL(){
+  encBL.incEncCount();
+}
+void interruptEncoderBR(){
+  encBR.incEncCount();
+}
+
 Robot robot(fl, fr, br, bl);
 
 void setup() {
-  //Serial.begin(9600);
-  //Serial.println("Initializing");
   robot.init();
   Wire.begin();
   if (!vl53.begin(0x29, &Wire)) {
@@ -33,14 +49,19 @@ void setup() {
   vl53.VL53L1X_SetDistanceMode(2);
   vl53.VL53L1X_SetROI(4, 16);
 
+  attachInterrupt(digitalPinToInterrupt(encFL.getEncIntPin()), interruptEncoderFL, RISING);
+  attachInterrupt(digitalPinToInterrupt(encFR.getEncIntPin()), interruptEncoderFR, RISING);
+  attachInterrupt(digitalPinToInterrupt(encBL.getEncIntPin()), interruptEncoderBL, RISING);
+  attachInterrupt(digitalPinToInterrupt(encBR.getEncIntPin()), interruptEncoderBR, RISING);
+
   myservo.attach(SERVO_PIN);
   Serial.begin(9600);
 }
 
 int stage = 0;
-  int a = 50; //distance from the right wall
-  int b = 50; //distance from wall were facing
-  int c = 50; //distance to hit the button?
+  int a = 150; //distance from the right wall
+  int b = 100; //distance from wall were facing
+  int c = 305; //distance to hit the button?
 void loop() {
   /*robot.drive(FORWARD, 100, 1500);
   robot.drive(BACKWARD, 100, 1500);
@@ -52,11 +73,34 @@ void loop() {
   switch(stage){ //make stage variable
     case 0: //need to get data from ultrasonic sensor (this is psuedocode)
     {
+      /*
+      robot.drive(FORWARD, 100, 500);
+      Serial.println(robot.Get_Y_Pos());
+      robot.drive(BACKWARD, 100, 500);
+      Serial.println(robot.Get_Y_Pos());
+      */   
+
+      
       Serial.println("In stage 0");
       delay(2000);
       moveUntilWithServo(RIGHT, a, true);
-      Serial.println("Change to stage 1");
       delay(1000);
+      
+
+      /*
+      robot.drive(FORWARD, 70, 100);
+      
+      Serial.print("Encoder: ");
+      Serial.print(encFL.getEncDist());
+      Serial.print(" ");
+      Serial.print(encFR.getEncDist());
+      Serial.print(" ");
+      Serial.print(encBL.getEncDist());
+      Serial.print(" ");
+      Serial.print(encBR.getEncDist());
+      Serial.println(" ");
+      */
+
       stage = 1;
       break;
     }
@@ -73,21 +117,30 @@ void loop() {
       Serial.println("In stage 2");
       delay(2000);
       moveUntilWithServo(LEFT, c, false);
+      delay(1000);
+
       stage = 3;
       break;
     }
     case 3: 
     {
-      robot.drive(FORWARD, 100, 1000); /* will need to test this value. Likely should use the encoders to verify*/
+      Serial.println("In stage 3");
+      delay(1000);
+      robot.drive(FORWARD, 100, 1500);
+      delay(1000);
+
       stage = 4;
       break;
     }
     case 4: 
     {
       Serial.println("In stage 4");
-      delay(2000);
-      robot.drive(BACKWARD,100,500);
-      robot.turn(CW,100,1500);
+      delay(1000);
+      robot.drive(BACKWARD,100,1500);
+      delay(500);
+      robot.turn(CW,70,1000);
+      delay(500);
+
       stage = 0;
       break;
       /* here would just need to back up a small bit*/
@@ -116,27 +169,25 @@ void servoTest() {
 }
 
 void moveUntilLt(moveDirection dir, int targetDist) {
+  /*
   while (vl53.distance() == -1){
     Serial.println(vl53.distance());
     Serial.print("stuck in -1");
     robot.drive(dir, 100);
     delay(50);
-  }
-  while (vl53.distance() > targetDist) {
-    Serial.println(vl53.distance());
-    Serial.print("moveUntilLt");
-    robot.drive(dir, 100);
-    delay(50);
+  }*/
+
+  while (revisedDist(vl53.distance()) > targetDist) {
+    robot.drive(dir, 70);
+    delay(10);
   }
   robot.stop();
 }
 
 void moveUntilGt(moveDirection dir, int targetDist) {
-  while (vl53.distance() < targetDist) {
-    Serial.println(vl53.distance());
-    Serial.print("moveUntilLt");
-    robot.drive(dir, 100);
-    delay(50);
+  while (revisedDist(vl53.distance()) < targetDist) {
+    robot.drive(dir, 70);
+    delay(10);
   }
   robot.stop();
 }
@@ -154,4 +205,11 @@ void moveUntilWithServo(moveDirection dir, int targetDist, bool isLt) { // 90 de
   } else {
   moveUntilGt(dir, targetDist);
   }
+}
+
+int revisedDist(int dist){  
+    if (dist==-1){
+        dist=1000;
+    }
+    return dist;
 }

@@ -16,6 +16,8 @@
 #define CW turnDirection::cw
 #define CCW turnDirection::ccw
 
+#define Kp 0.9
+
 class Robot {
   public:
     Robot(Motor fl, Motor fr, Motor br, Motor bl);
@@ -33,12 +35,19 @@ class Robot {
 
     void turn(turnDirection direction, int speed);
     void turn(turnDirection direction, int speed, int duration);
+    float Get_X_Pos();
+    float Get_Y_Pos();
+    void Update_Pos(moveDirection direction);
+    void clearAllEncCount();
 
   private:
+    float X_Pos;
+    float Y_Pos;
     Motor fl;
     Motor fr;
     Motor br;
     Motor bl;
+
 };
 
 #endif

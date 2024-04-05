@@ -75,47 +75,28 @@ static const traverse_node Travese_Nodes[]={A_to_D,
 /**********END OF TRAVERSE****************/
 
 
+float desired_angle=0.0;
 
-
-/*******RTOS INIT******************/
-//Loops
-// void triggers(void*);
-// void updater(void* pvParamaters);
-// void run(void* pvParameters);
-
-//Semaphores
-// SemaphoreHandle_t Semaphore_n_angle;
-// float n_angle=0.0;
-// SemaphoreHandle_t Semaphore_T_Index;
-// int traverse_index=0;
-/********END OF RTOS INIT***********/
 
 
 double error1=0;
 void setup() {
  
   #ifdef IEEE_SERIAL
-   
-  #endif
    Serial.begin(115200);
     Serial.println("In Setup");
     delay(100);
-
-
- 
-  
+  #endif
+   
   gyro = Gyro(false,true);
   robot.addIMU(&gyro);
   robot.init();
- delay(100);
+
   myservo.attach(SERVO_PIN);
   //Initialize State Machine
   //machina.init(&init_s);
-  an = gyro.getGyroZ();
-  #ifdef IEEE_SERIAL
-  Serial.println(an);
-     delay(100);
-  #endif
+
+
 }
 
 void loop() {
@@ -123,7 +104,7 @@ void loop() {
 
   
   
-   double error=an-n;
+  double error=an-n;
  
     float k=-3.5;
     float k2 = 1;

@@ -1,3 +1,4 @@
+
 #include <Arduino_FreeRTOS.h>
 #include <atomic.h>
 #include <event_groups.h>
@@ -23,32 +24,43 @@
 #include "Triggers.h"
 #include "States/Init.hpp"
 
+#if !defined(ACCEL_RANGE) && !defined(ACCEL_RATE) && IEEE_ACCEL
+#define ACCEL_RANGE LSM6DS_ACCEL_RANGE_16_G
+#define ACCEL_RATE  LSM6DS_RATE_1_66K_HZ
+#endif
+
+#if !defined(GYRO_RANGE) && !defined(GYRO_RATE)
+#define GYRO_RANGE  LSM6DS_GYRO_RANGE_500_DPS
+#define GYRO_RATE   LSM6DS_RATE_1_66K_HZ
+#endif
+
 #define MAX_T_INDEX 7
-
-
-/********ROBOT AND DEVICES*************/
 //Devices
+Adafruit_LSM6DS3TRC imu;
+
 //Motors
 Motor fr(FRONT_RIGHT_PWM, FRONT_RIGHT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor fl(FRONT_LEFT_PWM, FRONT_LEFT_DIR, FRONT_MOTORS_ENABLE, false);
 Motor br(BACK_RIGHT_PWM, BACK_RIGHT_DIR, BACK_MOTORS_ENABLE, false);
 Motor bl(BACK_LEFT_PWM, BACK_LEFT_DIR, BACK_MOTORS_ENABLE, true);
+
 //IMU
-static Gyro gyro(false,true);
-//Servo
+Gyro gyro(false,true);
+//Robot Initialization
 Servo myservo;
-//Ultrasonic
-static Ultrasonic us;
-//Robot Obj
+Adafruit_VL53L1X vl53 = Adafruit_VL53L1X();
+
 Robot robot(fl, fr, br, bl);
-/********END OF ROBOT INIT**********/
-
-
 
 /*****State Machine and States INIT*****/
 //State Machine Initializtion
-static StateMachine machina(&robot);
-//Trigger node array init
+StateMachine machina(&robot);
+ 
+//State Pointers
+State* inti;
+InitState i;
+
+//Node array init
 static State::trans_node init_nodes[MAX_NODES];
 static State::trans_node traverse_nodes[MAX_NODES];
 static State::trans_node orient_nodes[MAX_NODES];
@@ -92,6 +104,21 @@ int traverse_index=0;
 
 
 void setup() {
+  #if ENCODERS_ENABLE  
+    //Attach Encoders to Motors
+    fl.attachEncoder(&encFL);
+    fr.attachEncoder(&encFR);
+    bl.attachEncoder(&encBL);
+    br.attachEncoder(&encBR);
+
+    //Setup Interrupts
+    attachInterrupt(digitalPinToInterrupt(encFL.getEncIntPin()), interruptEncoderFL, RISING);
+    attachInterrupt(digitalPinToInterrupt(encFR.getEncIntPin()), interruptEncoderFR, RISING);
+    attachInterrupt(digitalPinToInterrupt(encBL.getEncIntPin()), interruptEncoderBL, RISING);
+    attachInterrupt(digitalPinToInterrupt(encBR.getEncIntPin()), interruptEncoderBR, RISING);
+  #endif
+
+
  
   #ifdef IEEE_SERIAL
     Serial.begin(115200);
@@ -123,10 +150,11 @@ void setup() {
   #endif
 
 
+
 }
 
 void loop() {
-  
+}
   #ifdef IEEE_SERIAL
     Serial.println("Trigger: "+(String)trigger);
   #endif

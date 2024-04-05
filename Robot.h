@@ -1,5 +1,5 @@
-#ifndef Robot_H
-#define Robot_H
+#ifndef ROBOT_H
+#define ROBOT_H
 
 #include <Arduino.h>
 #include "IEEE_Pinout.h"
@@ -8,6 +8,7 @@
 #include "Gyro.h"
 #include "Ultrasonic.h"
 #include <Servo.h>
+
 
 #define MECANUM drivetrain::mecanum
 #define TWO_WHEEL drivetrain::twoWheel
@@ -21,8 +22,9 @@
 #define CCW turnDirection::ccw
 
 class Robot {
+friend class Odometry;
   public:
-    Robot(Motor fl, Motor fr, Motor br, Motor bl);
+    Robot(Motor* fl, Motor* fr, Motor* br, Motor* bl);
 
     void init();
 
@@ -38,15 +40,15 @@ class Robot {
     void addUltrasonic(Ultrasonic*);
     void turn(turnDirection direction, int speed);
     void turn(turnDirection direction, int speed, int duration);
-    float getAngle();
+    Motor* getMotor(WHEEL);
   private:
-    Motor fl;
-    Motor fr;
-    Motor br;
-    Motor bl;
+    Motor *fl, *fr, *br, *bl;
+
+    float getAngle();
     Gyro* imu;
     Ultrasonic* us;
     float target_angle;
+
 };
 
 #endif

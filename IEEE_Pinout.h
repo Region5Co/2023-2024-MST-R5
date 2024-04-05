@@ -1,4 +1,5 @@
 #ifndef IEEE_PINOUT_H
+#define IEEE_PINOUT_H
 #define IEEE_DEBUG false
 
 #define D0   0
@@ -90,4 +91,9 @@
 
 #define SERVO_PIN             D8
 
+<<<<<<< HEAD
 #endif
+=======
+
+#endif
+>>>>>>> 9eafa77a23ef30884a8e2e849e89cd77ec654747

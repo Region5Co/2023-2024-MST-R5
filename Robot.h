@@ -22,7 +22,7 @@
 #define CW turnDirection::cw
 #define CCW turnDirection::ccw
 
-#define Kp 0.9
+#define Kp 1
 
 class Robot {
 friend class Odometry;

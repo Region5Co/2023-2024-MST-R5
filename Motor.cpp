@@ -49,9 +49,6 @@ Encoder* Motor::getEncoder(){
   return this->encoder;
 }
 
-Encoder* Motor::getEncoder(){
-  return this->encoder;
-}
 //@brief Sets speed of the pwmPin or enable of the motor
 //@param speed An integer ranging from 0-100 that will be mapped and fitted to a 8-bit value (0-255)
 //

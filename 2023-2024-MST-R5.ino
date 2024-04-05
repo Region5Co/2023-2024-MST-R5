@@ -39,11 +39,9 @@ Gyro gyro;
 Servo myservo;
 //Ultrasonic
 static Ultrasonic us;
-//Robot ObjAdafruit_VL53L1X vl53 = Adafruit_VL53L1X(21, 20);
+//Robot Obj
+Adafruit_VL53L1X vl53 = Adafruit_VL53L1X(21, 20);
 Adafruit_LSM6DS3TRC imu;
-
-//IMU
-Gyro gyro(false,true);
 
 Encoder encFL(E_FRONT_LEFT_INT, E_FORNT_LEFT_DIR);
 Encoder encFR(E_FRONT_RIGHT_INT, E_FRONT_RIGHT_DIR);
@@ -154,46 +152,28 @@ void setup() {
 }
 
 int stage = 0;
-  int a = 150; //distance from the right wall
-  int b = 100; //distance from wall were facing
-  int c = 305; //distance to hit the button?
+  int a = 190; //distance from the right wall
+  int b = 300; //distance from wall were facing
+  int c = 200; //distance to hit the button?
 void loop() {
-  double n = gyro.update();
+  //delay(100);
+  //error1=error;
   
-  double error=an-n;
- 
-    float k=-3.5;
-    float k2 = 1;
-    int speed = 50;
-    //Serial.println(gyro.getGyroZ());
-    robot.drive(speed,0,(error)*k);
-    //delay(100);
-    error1=error;
-    
-    
-    
-    //delay(2000);
-    //turn 45 degrees CW
-    int current_pos = encoder.getEncDist();
-    int goal = Travese_Nodes[i].ft - current_pos;
-    Serial.println(encoder.getEncDist());
-    i=0;
-    while(encoder.getEncDist()<goal){
-      robot.drive(FORWARD, 60, 1000);
-      //checkObstruction(forward, 200,Travese_Nodes[i].left_right);
-    }
-    i= (i>=MAX_T_INDEX)? 0: i+1;
   
-}
-
-
-
-  /*robot.drive(FORWARD, 100, 1500);
-  robot.drive(BACKWARD, 100, 1500);
-  robot.drive(LEFT, 100, 1500);
-  robot.drive(RIGHT, 100, 1500);
-  robot.turn(CW, 100, 1500);
-  robot.turn(CCW, 100, 1500);*/
+  
+  //delay(2000);
+  //turn 45 degrees CW
+  /*
+  int current_pos = encoder.getEncDist();
+  int goal = Travese_Nodes[i].ft - current_pos;
+  Serial.println(encoder.getEncDist());
+  i=0;
+  while(encoder.getEncDist()<goal){
+    robot.drive(FORWARD, 60, 1000);
+    //checkObstruction(forward, 200,Travese_Nodes[i].left_right);
+  }
+  i= (i>=MAX_T_INDEX)? 0: i+1;
+  */
 
   switch(stage){ //make stage variable
     case 0: //need to get data from ultrasonic sensor (this is psuedocode)
@@ -261,9 +241,9 @@ void loop() {
     {
       Serial.println("In stage 4");
       delay(1000);
-      robot.drive(BACKWARD,100,1500);
+      robot.drive(BACKWARD,100,750);
       delay(500);
-      robot.turn(CW,70,1000);
+      robot.turn(CW,70,1200);
       delay(500);
 
       stage = 0;
@@ -303,16 +283,43 @@ void moveUntilLt(moveDirection dir, int targetDist) {
   }*/
 
   while (revisedDist(vl53.distance()) > targetDist) {
-    robot.drive(dir, 70);
-    delay(10);
+    double n = gyro.update();
+  
+    double error=an-n;
+ 
+    float k=-3.5;
+    float k2 = 1;
+    int speed = 50;
+    //Serial.println(gyro.getGyroZ());
+    if (dir == FORWARD) {
+      robot.drive(speed,0,(error)*k);
+    } else {
+      robot.drive(dir, 80);
+    }
+    //robot.drive(dir, 70);
+    //delay(10);
   }
   robot.stop();
 }
 
 void moveUntilGt(moveDirection dir, int targetDist) {
+
   while (revisedDist(vl53.distance()) < targetDist) {
-    robot.drive(dir, 70);
-    delay(10);
+    double n = gyro.update();
+  
+    double error=an-n;
+ 
+    float k=-3.5;
+    float k2 = 1;
+    int speed = 50;
+    //Serial.println(gyro.getGyroZ());
+    if (dir == FORWARD) {
+      robot.drive(speed,0,(error)*k);
+    } else {
+      robot.drive(dir, 70);
+    }
+    //robot.drive(dir, 70);
+    //delay(10);
   }
   robot.stop();
 }
@@ -328,7 +335,7 @@ void moveUntilWithServo(moveDirection dir, int targetDist, bool isLt) { // 90 de
   if (isLt) {
     moveUntilLt(dir, targetDist);
   } else {
-  moveUntilGt(dir, targetDist);
+    moveUntilGt(dir, targetDist);
   }
 }
 

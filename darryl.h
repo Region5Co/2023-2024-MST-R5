@@ -150,10 +150,10 @@ void moveUntilWithServo(moveDirection dir, int targetDist, bool ISLEFT) { // 90 
   }
   delay(2000);
   moveForward(dir,targetDist,ISLEFT);
-  if (isLt) {
+  /*if (isLt) {
     moveUntilLt(dir, targetDist);
   } else {
   moveUntilGt(dir, targetDist);
-  }
+  }*/
 }
 

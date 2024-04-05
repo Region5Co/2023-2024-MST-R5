@@ -167,3 +167,9 @@ void Robot::addIMU(Gyro* _imu){
 float Robot::getAngle(){
   return this->imu->getGyroZ();
 }
+
+void Robot::turn(float rotation, float desired_angle){
+  rotation*= ((getAngle()-desired_angle)>=0)? 1:-1;
+  drive(0,0,rotation);
+  
+}

@@ -42,6 +42,7 @@ friend class Odometry;
     void addUltrasonic(Ultrasonic*);
     #endif
     void turn(turnDirection direction, int speed);
+    void turn(float rotation, float desired_a);
     void turn(turnDirection direction, int speed, int duration);
     Motor* getMotor(WHEEL);
     float getAngle();

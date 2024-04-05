@@ -16,11 +16,11 @@
 #define CW turnDirection::cw
 #define CCW turnDirection::ccw
 
-#define Kp 0.9
+#define Kp 0.025
 
 class Robot {
   public:
-    Robot(Motor fl, Motor fr, Motor br, Motor bl);
+    Robot(Motor* fl, Motor* fr, Motor* br, Motor* bl);
 
     void init();
 
@@ -32,6 +32,8 @@ class Robot {
     void drive(int fl, int fr, int br, int bl);
     void drive(moveDirection direction, int speed, int duration);
     void drive(int fl, int fr, int br, int bl, int duration);
+    void drive_Enc(moveDirection direction, int speed, float distance);
+    float getTestValue();
 
     void turn(turnDirection direction, int speed);
     void turn(turnDirection direction, int speed, int duration);
@@ -43,10 +45,18 @@ class Robot {
   private:
     float X_Pos;
     float Y_Pos;
-    Motor fl;
-    Motor fr;
-    Motor br;
-    Motor bl;
+    float currY;
+    float currX;
+    float leftDist;
+    float rightDist;
+    float frontDist;
+    float backDist;
+    float distDiff;
+    float leftKp;
+    float rightKp;
+    float frontKp;
+    float backKp;
+    Motor *fl, *fr, *br, *bl;
 
 };
 

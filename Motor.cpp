@@ -62,6 +62,14 @@ void Motor::stop() {
   digitalWrite(dirPin, 0);
 }
 
+int Motor::getDirPin(){
+  return dirPin;
+}
+
+void Motor::attachEncoder(Encoder* en){
+  this->encoder = en;
+}
+
 //@brief Uses the inputed velocity to run the motor at a desired speed and corresponding dirrection
 //@param velocity should be an integer from -100 to 100
 //

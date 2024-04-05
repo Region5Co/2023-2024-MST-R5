@@ -18,6 +18,7 @@ friend class Motor;
     void incEncCount();
     float getEncDist();
     float getCurMoveEncDist();
+    int getCurMoveEncCount();
     float getRPM();
     void clearEncCount();
   

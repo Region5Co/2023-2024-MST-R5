@@ -32,9 +32,13 @@ void interruptEncoderBR(){
   encBR.incEncCount();
 }
 
-Robot robot(fl, fr, br, bl);
+Robot robot(&fl, &fr, &br, &bl);
 
 void setup() {
+  fl.attachEncoder(&encFL);
+  fr.attachEncoder(&encFR);
+  bl.attachEncoder(&encBL);
+  br.attachEncoder(&encBR);
   robot.init();
   Wire.begin();
   if (!vl53.begin(0x29, &Wire)) {
@@ -59,8 +63,8 @@ void setup() {
 }
 
 int stage = 0;
-  int a = 150; //distance from the right wall
-  int b = 100; //distance from wall were facing
+  int a = 170; //distance from the right wall
+  int b = 120; //distance from wall were facing
   int c = 305; //distance to hit the button?
 void loop() {
   /*robot.drive(FORWARD, 100, 1500);
@@ -73,19 +77,22 @@ void loop() {
   switch(stage){ //make stage variable
     case 0: //need to get data from ultrasonic sensor (this is psuedocode)
     {
+      /*robot.drive_Enc(FORWARD, 60, 24);
+      delay(2000);
+      robot.drive_Enc(LEFT, 60, 24);
+      delay(2000);
+      robot.drive_Enc(BACKWARD, 60, 24);
+      delay(2000);
+      robot.drive_Enc(RIGHT, 60, 24);
+      delay(2000);*/
+      robot.turn(CW, 70);
+      delay(2000);
       /*
-      robot.drive(FORWARD, 100, 500);
-      Serial.println(robot.Get_Y_Pos());
-      robot.drive(BACKWARD, 100, 500);
-      Serial.println(robot.Get_Y_Pos());
-      */   
-
-      
       Serial.println("In stage 0");
       delay(2000);
       moveUntilWithServo(RIGHT, a, true);
       delay(1000);
-      
+      */
 
       /*
       robot.drive(FORWARD, 70, 100);
@@ -101,7 +108,7 @@ void loop() {
       Serial.println(" ");
       */
 
-      stage = 1;
+      //stage = 1;
       break;
     }
     case 1:
@@ -136,9 +143,9 @@ void loop() {
     {
       Serial.println("In stage 4");
       delay(1000);
-      robot.drive(BACKWARD,100,1500);
+      robot.drive(BACKWARD,70,1000);
       delay(500);
-      robot.turn(CW,70,1000);
+      robot.turn(CW,70,1410);
       delay(500);
 
       stage = 0;

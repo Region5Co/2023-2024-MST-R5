@@ -23,6 +23,9 @@ void Encoder::init() {
 int Encoder::getEncCount() {
   return this->encCount;
 }
+int Encoder::getCurMoveEncCount(){
+  return this->curMoveEncCount;
+}
 
 //@brief Gets the encoder interrupt pin number
 //
@@ -33,7 +36,7 @@ int Encoder::getEncIntPin(){
 //@brief Gets the total distance calculated from the number of encoder rotations (in inches)
 //
 float Encoder::getEncDist(){
-  return float(encCount)/358.0*5.874778;
+  return float(this->encCount)/358.0*5.874778;
 }
 
 //Not tested...
@@ -45,22 +48,21 @@ float Encoder::getRPM(){
 //@brief Increments or decrements the total encoder count based on the direction of rotation
 //
 void Encoder::incEncCount(){
-  currTime = millis();
+  this->currTime = millis();
   if (digitalRead(this->dirPin) > 0){
-    encCount +=1;
-    curMoveEncCount +=1;
+    this->encCount +=1;
+    this->curMoveEncCount +=1;
   } else {
-    encCount -=1;
-    curMoveEncCount -=1;
+    this->encCount -=1;
+    this->curMoveEncCount -=1;
   }
-  lastTime = currTime;
+  this->lastTime = this->currTime;
 }
 
 void Encoder::clearEncCount(){
-  curMoveEncCount = 0;
+  this->curMoveEncCount = 0;
 }
 
 float Encoder::getCurMoveEncDist(){
-
-  return float(curMoveEncCount)/358.0*5.874778;
+  return float(this->curMoveEncCount)/358.0*5.874778;
 }

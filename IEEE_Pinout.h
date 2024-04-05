@@ -1,4 +1,5 @@
 #ifndef IEEE_PINOUT_H
+#define IEEE_PINOUT_H
 #define IEEE_DEBUG false
 
 #define D0   0
@@ -57,5 +58,6 @@
 #define IEEE_B1               A0 //Test for uno
 
 #define SERVO_PIN             50
+
 
 #endif

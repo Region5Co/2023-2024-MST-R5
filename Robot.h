@@ -1,10 +1,11 @@
-#ifndef Robot_H
-#define Robot_H
+#ifndef ROBOT_H
+#define ROBOT_H
 
 #include <Arduino.h>
 #include "Motor.h"
 #include "types.h"
 #include "Gyro.h"
+
 
 #define MECANUM drivetrain::mecanum
 #define TWO_WHEEL drivetrain::twoWheel
@@ -18,8 +19,9 @@
 #define CCW turnDirection::ccw
 
 class Robot {
+friend class Odometry;
   public:
-    Robot(Motor fl, Motor fr, Motor br, Motor bl);
+    Robot(Motor* fl, Motor* fr, Motor* br, Motor* bl);
 
     void init();
 
@@ -34,14 +36,14 @@ class Robot {
     void addIMU(Gyro*);
     void turn(turnDirection direction, int speed);
     void turn(turnDirection direction, int speed, int duration);
-    float getAngle();
+    Motor* getMotor(WHEEL);
   private:
-    Motor fl;
-    Motor fr;
-    Motor br;
-    Motor bl;
+    Motor *fl, *fr, *br, *bl;
+
+    float getAngle();
     Gyro* imu;
     float target_angle;
+
 };
 
 #endif

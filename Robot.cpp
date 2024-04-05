@@ -47,6 +47,7 @@ void Robot::stop() {
 void Robot::drive(moveDirection direction, int speed) {
     switch(direction) {
       case FORWARD:
+        
         drive(speed, speed, speed, speed);
         break;
 

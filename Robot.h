@@ -22,7 +22,6 @@
 #define CW turnDirection::cw
 #define CCW turnDirection::ccw
 
-#define Kp 1 //change something??
 
 class Robot {
 friend class Odometry;
@@ -39,6 +38,7 @@ friend class Odometry;
     void drive(moveDirection direction, int speed);
     void drive(int fl, int fr, int br, int bl);
     void drive(moveDirection direction, int speed, int duration);
+    void drive_enc(int drive, int strafe, int poll, float dist);
     //void drive(int fl, int fr, int br, int bl, int duration);
 
     void addIMU(Gyro*);
@@ -54,13 +54,13 @@ friend class Odometry;
     void Update_Pos(moveDirection direction);
     void clearAllEncCount();
     float getAngle();
+    Motor* getMotor(WHEEL);
   private:
     float X_Pos;
     float Y_Pos;
     float currY;
     float currX;
     float leftDist;
-    Motor* getMotor(WHEEL);
     
     Motor *fl, *fr, *br, *bl;
 

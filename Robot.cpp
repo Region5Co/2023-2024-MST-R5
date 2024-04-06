@@ -55,25 +55,25 @@ void Robot::drive(moveDirection direction, int speed) {
     switch(direction) {
       case FORWARD:
         clearAllEncCount();
-        drive(Kp*speed, Kp*speed, Kp*speed, Kp*speed);
+        drive(speed, speed, speed, speed);
         Update_Pos(FORWARD);
         break;
 
       case BACKWARD:
         clearAllEncCount();
-        drive(-Kp*speed, -Kp*speed, -Kp*speed, -Kp*speed);
+        drive(-speed, -speed, -speed, -speed);
         Update_Pos(BACKWARD);
         break;
         
       case LEFT:
         clearAllEncCount();
-        drive(-Kp*speed, Kp*speed, -Kp*speed, Kp*speed);
+        drive(-speed, speed, -speed, speed);
         Update_Pos(LEFT);
         break;
 
       case RIGHT:
         clearAllEncCount();
-        drive(Kp*speed, -Kp*speed, Kp*speed, -Kp*speed);
+        drive(speed, -speed, speed, -speed);
         Update_Pos(RIGHT);
         break;
       default:
@@ -184,7 +184,8 @@ void Robot::turn(turnDirection direction, float degrees, bool test){
   switch(direction) {
     case CW:
       leftDist = 0;
-      while(abs(leftDist) < (degrees/180)*11.8){
+      while(abs(leftDist) < (degrees/180)*11.7){
+        getAngle();
         clearAllEncCount();
         drive(70, -70, -70, 70);
         delay(50);
@@ -195,7 +196,8 @@ void Robot::turn(turnDirection direction, float degrees, bool test){
 
     case CCW:
       leftDist = 0;
-      while(abs(leftDist) < (degrees/180)*11.8){
+      while(abs(leftDist) < (degrees/180)*11.7){
+        getAngle();
         clearAllEncCount();
         drive(-70, 70, 70, -70);
         delay(50);
@@ -271,4 +273,85 @@ void Robot::addIMU(Gyro* _imu){
 
 float Robot::getAngle(){
   return this->imu->getGyroZ();
+}
+
+void Robot::drive_enc(int _drive, int strafe, int poll, float dist){
+  int minMotor;
+  float KpFL = 5, KpFR = 4, KpBR = 1, KpBL = 2;
+  float errFL = 0, errFR = 0, errBR = 0, errBL = 0;
+
+  float tFLDist[3];
+
+  /*
+  float encDist[] = {abs(fl->getEncoder()->getCurMoveEncDist()), abs(fr->getEncoder()->getCurMoveEncDist()), abs(br->getEncoder()->getCurMoveEncDist()),abs(bl->getEncoder()->getCurMoveEncDist())};
+  if(encDist[0] <= encDist[1] && encDist[0] <= encDist[2] && encDist[0] <= encDist[3]){
+    minMotor = 0;
+    KpFL = 1 - (encDist[0]-encDist[minMotor])/encDist[minMotor];
+    KpFR = 1 - (encDist[1]-encDist[minMotor])/encDist[minMotor];
+    KpBR = 1 - (encDist[2]-encDist[minMotor])/encDist[minMotor];
+    KpBL = 1 - (encDist[3]-encDist[minMotor])/encDist[minMotor];
+  } else if(encDist[1] <= encDist[0] && encDist[1] <= encDist[2] && encDist[1] <= encDist[3]){
+    minMotor = 1;
+    KpFL = 1 - (encDist[0]-encDist[minMotor])/encDist[minMotor];
+    KpFR = 1 - (encDist[1]-encDist[minMotor])/encDist[minMotor];
+    KpBR = 1 - (encDist[2]-encDist[minMotor])/encDist[minMotor];
+    KpBL = 1 - (encDist[3]-encDist[minMotor])/encDist[minMotor];
+  } else if(encDist[2] <= encDist[0] && encDist[2] <= encDist[1] && encDist[2] <= encDist[3]){
+    minMotor = 2;
+    KpFL = 1 - (encDist[0]-encDist[minMotor])/encDist[minMotor];
+    KpFR = 1 - (encDist[1]-encDist[minMotor])/encDist[minMotor];
+    KpBR = 1 - (encDist[2]-encDist[minMotor])/encDist[minMotor];
+    KpBL = 1 - (encDist[3]-encDist[minMotor])/encDist[minMotor];
+  } else if(encDist[3] <= encDist[0] && encDist[3] <= encDist[1] && encDist[3] <= encDist[2]){
+    minMotor = 3;
+    KpFL = 1 - (encDist[0]-encDist[minMotor])/encDist[minMotor];
+    KpFR = 1 - (encDist[1]-encDist[minMotor])/encDist[minMotor];
+    KpBR = 1 - (encDist[2]-encDist[minMotor])/encDist[minMotor];
+    KpBL = 1 - (encDist[3]-encDist[minMotor])/encDist[minMotor];
+  } else {
+    KpFL = 1;
+    KpFR = 1;
+    KpBR = 1;
+    KpBL = 1;
+  }
+  Serial.print(KpFL);
+  Serial.print(" ");
+  Serial.print(KpFR);
+  Serial.print(" ");
+  Serial.print(KpBR);
+  Serial.print(" ");
+  Serial.println(KpBL);
+  delay(10000);
+  */
+  while(abs(Get_Y_Pos()-currY) < dist){
+    minMotor = 2;
+    clearAllEncCount();
+    drive(KpFL*errFL+_drive, KpFR*errFR+_drive, KpBR*errBR+_drive, KpBL*errBL+_drive);
+    Serial.print(KpFL*errFL+_drive);
+    Serial.print(" ");
+    Serial.print(KpFR*errFR+_drive);
+    Serial.print(" ");
+    Serial.print(KpBR*errBR+_drive);
+    Serial.print(" ");
+    Serial.println(KpBL*errBL+_drive);
+    delay(poll);
+    stop();
+    float encDist[] = {abs(fl->getEncoder()->getCurMoveEncDist()), abs(fr->getEncoder()->getCurMoveEncDist()), abs(br->getEncoder()->getCurMoveEncDist()),abs(bl->getEncoder()->getCurMoveEncDist())};
+    
+    tFLDist[0] += encDist[0];
+    tFLDist[1] += encDist[1];
+    tFLDist[2] += encDist[2];
+    tFLDist[3] += encDist[3];
+
+    errFL += tFLDist[2]-tFLDist[0];
+    errFR += tFLDist[2]-tFLDist[1];
+    errBR += tFLDist[2]-tFLDist[2];
+    errBL += tFLDist[2]-tFLDist[3];
+    Serial.println(errFL);
+    Serial.println(errFR);
+    Serial.println(float(errBR));
+    Serial.println(float(errBL));
+
+    Update_Pos(FORWARD);
+  }
 }

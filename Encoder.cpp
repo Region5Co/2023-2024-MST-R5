@@ -33,7 +33,7 @@ int Encoder::getEncIntPin(){
 //@brief Gets the total distance calculated from the number of encoder rotations (in inches)
 //
 float Encoder::getEncDist(){
-  return float(encCount)/358.0*5.874778;
+  return float(encCount)/358.0*5.874778*1.14;
 }
 
 //Not tested...
@@ -61,7 +61,7 @@ void Encoder::clearEncCount(){
 }
 
 float Encoder::getCurMoveEncDist(){
-  return float(curMoveEncCount)/358.0*5.874778;
+  return float(curMoveEncCount)/358.0*5.874778*1.14;
 }
 
 int Encoder::getCurrMoveCount()

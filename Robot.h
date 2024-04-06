@@ -39,13 +39,14 @@ friend class Odometry;
     void drive(moveDirection direction, int speed);
     void drive(int fl, int fr, int br, int bl);
     void drive(moveDirection direction, int speed, int duration);
-    void drive(int fl, int fr, int br, int bl, int duration);
+    //void drive(int fl, int fr, int br, int bl, int duration);
 
     void addIMU(Gyro*);
     #if IEEE_US
     void addUltrasonic(Ultrasonic*);
     #endif
     void turn(turnDirection direction, int speed);
+    void turn(turnDirection direction, float degrees, bool test);
     void turn(float rotation, float desired_a);
     void turn(turnDirection direction, int speed, int duration);
     float Get_X_Pos();
@@ -56,6 +57,9 @@ friend class Odometry;
   private:
     float X_Pos;
     float Y_Pos;
+    float currY;
+    float currX;
+    float leftDist;
     Motor* getMotor(WHEEL);
     
     Motor *fl, *fr, *br, *bl;

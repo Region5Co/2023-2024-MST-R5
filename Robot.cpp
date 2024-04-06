@@ -93,8 +93,39 @@ void Robot::drive(int drive, int strafe, float rotation) {
     br->run(drive+strafe-rotation);
 }
 
-void Robot::drive(int drive, int strafe, float rotation, int duration, float dist){
+void Robot::drive(int _drive, int strafe, float rotate, int duration, float dist){
+  clearAllEncCount();
+  if(_drive > 0){
+    float e=0.0,kp=2.3;
+    float desired_angle = getAngle();
+    currY = Get_Y_Pos();
+    while(abs(Get_Y_Pos()-currY) < dist){
+      clearAllEncCount();
+      e = (getAngle()-desired_angle)*kp;
+      drive(_drive, 0, e);
+      delay(duration);
+      stop();
+      Update_Pos(FORWARD);
+    }
+  } else if (_drive < 0){
+    float e = 0.0, kp= 2.3;
+    float desired_angle = getAngle();
+    currY = Get_Y_Pos();
+    while(abs(Get_Y_Pos()-currY) < dist){
+      clearAllEncCount();
+      e = (getAngle()-desired_angle)*kp;
+      drive(_drive, 0, e);
+      delay(duration);
+      stop();
+      Update_Pos(BACKWARD);
+    }
+  } else if (strafe > 0){
 
+  } else if (strafe < 0){
+
+  } else {
+
+  }
 }
 
 
@@ -124,11 +155,12 @@ void Robot::drive(moveDirection direction, int speed, int duration) {
 //@param fl,fr,br,bl Integer representing velocity ranging [-100,100]
 //@param duration Time in milliseconds to allow robot to drive
 //
+/*
 void Robot::drive(int fl, int fr, int br, int bl, int duration) {
   drive(fl, fr, br, bl);
   delay(duration);
   stop();
-}
+}*/
 
 //@brief Moves the robot in the passed direction about its center
 //@param direction Requires an input of enum @ref turnDirection to go desired direction
@@ -142,6 +174,34 @@ void Robot::turn(turnDirection direction, int speed) {
 
     case CCW:
       drive(-speed, -speed, speed, speed);
+      break;
+    default:
+      break;
+  }
+}
+
+void Robot::turn(turnDirection direction, float degrees, bool test){
+  switch(direction) {
+    case CW:
+      leftDist = 0;
+      while(abs(leftDist) < 11.85){
+        clearAllEncCount();
+        drive(70, -70, -70, 70);
+        delay(50);
+        stop();
+        leftDist += float((fl->getEncoder()->getCurMoveEncDist()+bl->getEncoder()->getCurMoveEncDist())/2.0);
+      }
+      break;
+
+    case CCW:
+      leftDist = 0;
+      while(abs(leftDist) < 11.85){
+        clearAllEncCount();
+        drive(-70, 70, 70, -70);
+        delay(50);
+        stop();
+        leftDist += float((fl->getEncoder()->getCurMoveEncDist()+bl->getEncoder()->getCurMoveEncDist())/2.0);
+      }
       break;
     default:
       break;
@@ -169,12 +229,8 @@ void Robot::turn(float rotation, float desired_angle){
 
 }
 
-float Robot::Get_X_Pos(){
-  return fl->getEncoder()->getEncCount();
-}
-
 float Robot::Get_Y_Pos(){
-  return Y_Pos;
+  return this->Y_Pos;
 }
 
 void Robot::clearAllEncCount(){
@@ -187,12 +243,14 @@ void Robot::clearAllEncCount(){
 void Robot::Update_Pos(moveDirection direction){
   switch(direction){
     case FORWARD:
-      Y_Pos += (abs(fl->getEncoder()->getEncDist()) + abs(fr->getEncoder()->getEncDist()) + abs(bl->getEncoder()->getEncDist()) + abs(br->getEncoder()->getEncDist()))/4;
+      Y_Pos += (abs(fl->getEncoder()->getCurMoveEncDist()) + abs(fr->getEncoder()->getCurMoveEncDist()) + abs(bl->getEncoder()->getCurMoveEncDist()) + abs(br->getEncoder()->getCurMoveEncDist()))/4.0;
       break;
     case BACKWARD:
-      Y_Pos -= (abs(fl->getEncoder()->getEncDist()) + abs(fr->getEncoder()->getEncDist()) + abs(bl->getEncoder()->getEncDist()) + abs(br->getEncoder()->getEncDist()))/4;
+      Y_Pos -= (abs(fl->getEncoder()->getCurMoveEncDist()) + abs(fr->getEncoder()->getCurMoveEncDist()) + abs(bl->getEncoder()->getCurMoveEncDist()) + abs(br->getEncoder()->getCurMoveEncDist()))/4.0;
       break;
   }
+  
+
 }
 
 //@brief Returns an attached Motor

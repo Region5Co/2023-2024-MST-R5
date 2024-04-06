@@ -102,7 +102,11 @@ int i=0;
 
 double error1=0;
 void setup() {
- 
+  fl.attachEncoder(&encFL);
+  fr.attachEncoder(&encFR);
+  bl.attachEncoder(&encBL);
+  br.attachEncoder(&encBR);
+
   #ifdef IEEE_SERIAL
    Serial.begin(115200);
     Serial.println("In Setup");
@@ -175,7 +179,15 @@ void loop() {
   switch(stage){ //make stage variable
     case 0: //need to get data from ultrasonic sensor (this is psuedocode)
     {
-      
+      Serial.println("In case 0");
+      robot.drive(70, 0, 0.0, 25, 30.0);
+      delay(1000);
+      robot.drive(-70, 0, 0.0, 25, 30.0);
+      delay(1000);
+
+      robot.turn(CCW, 180.0, true);
+      delay(1000);
+
       Serial.println("In stage 0");
       delay(100);
       moveUntilWithServo(RIGHT, a, true);
@@ -205,7 +217,7 @@ void loop() {
       Serial.println("In stage 3");
       delay(100);
       //go full forward
-      robot.drive(100,0,0);
+      robot.drive(100,0,0,50,5);
       delay(100);
       stage = 4;
       break;
@@ -215,18 +227,18 @@ void loop() {
       Serial.println("In stage 4");
       delay(1000);
       //drive backwards
-      robot.drive(-100,0,0);
-      delay(500);
-      float kp=2.1;
-      float error= ann-(desired_angle+180);
-      //robot.turn(70, 180);
-      robot.drive(0,0,(error)*kp);
-      delay(500);
-      stage = 0;
+      robot.drive(-100,0,0,50,5);
+      robot.stop();
+
+      stage = 5;
       break;
       /* here would just need to back up a small bit*/
-       
     }
+    case 5:
+      robot.turn(CW, 180.0, true);
+      delay(1000);
+      stage = 0;
+      break;
   }
 }
 

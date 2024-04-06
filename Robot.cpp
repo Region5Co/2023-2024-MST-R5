@@ -93,13 +93,13 @@ void Robot::drive(int drive, int strafe, float rotation) {
     br->run(drive+strafe-rotation);
 }
 
-void Robot::drive(int _drive, int strafe, float rotate, int duration, float dist){
+void Robot::drive(int _drive, int strafe, float d_stop, int duration, float dist){
   clearAllEncCount();
   if(_drive > 0){
-    float e=0.0,kp=2.3;
+    float e=0.0,kp=5.3;
     float desired_angle = getAngle();
     currY = Get_Y_Pos();
-    while(abs(Get_Y_Pos()-currY) < dist){
+    while(abs(Get_Y_Pos()-currY)<dist){
       clearAllEncCount();
       e = (getAngle()-desired_angle)*kp;
       drive(_drive, 0, e);
@@ -108,7 +108,7 @@ void Robot::drive(int _drive, int strafe, float rotate, int duration, float dist
       Update_Pos(FORWARD);
     }
   } else if (_drive < 0){
-    float e = 0.0, kp= 2.3;
+    float e = 0.0, kp= 5.3;
     float desired_angle = getAngle();
     currY = Get_Y_Pos();
     while(abs(Get_Y_Pos()-currY) < dist){

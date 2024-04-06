@@ -7,7 +7,7 @@
 #include "States/Init.hpp"
 
 #define MAX_T_INDEX 7
-#define TOLERANCE 5
+#define TOLERANCE 10
 
 /********ROBOT AND DEVICES*************/
 //Devices
@@ -23,7 +23,7 @@ Servo myservo;
 //Ultrasonic
 static Ultrasonic us;
 //Robot Obj
-Adafruit_VL53L1X vl53 = Adafruit_VL53L1X(21, 20);
+static Adafruit_VL53L1X vl53 = Adafruit_VL53L1X(21, 20);
 
 
 Encoder encFL(E_FRONT_LEFT_INT, E_FORNT_LEFT_DIR);
@@ -48,11 +48,11 @@ Robot robot(&fl, &fr, &br, &bl);
 
 
 float base_angle=0.0;
-float kp=2.1;
-int stage = 0;
+float kp=5.1;
+int stage = 2;
 int a = 190; //distance from the right wall
 int b = 190; //distance from wall were facing
-int c = 275; //distance to hit the button?
+int c = 250; //distance to hit the button?
 double an;
 double error1=0;
 
@@ -93,9 +93,9 @@ void setup() {
   myservo.attach(SERVO_PIN);
 
   float de =1;
-  fl.decrease(0.97);
-  fr.decrease(0.97);
-  bl.decrease(0.97);
+  fl.decrease(1);
+  fr.decrease(1);
+  bl.decrease(1);
   br.decrease(de);
   base_angle = robot.getAngle();
   myservo.write(50);
@@ -109,11 +109,11 @@ void loop() {
   switch(stage){ //make stage variable
     case 0:
 
-      robot.drive_enc(70, 0, 50, 86);
-      delay(10);
-      stage =0;
-      break;
-      /*
+      // robot.drive_enc(70, 0, 50, 86);
+      // delay(10);
+      // stage =0;
+      // break;
+      
       //Move right based on IR sensor distance from wall, a
       Serial.println("In stage 0: Moving Right");
       robot.drive(70, 0, 0, 50, 6);
@@ -121,16 +121,16 @@ void loop() {
       robot.turn(CW, 90.0, true);
       stage++;
       robot.stop();
-      delay(500);*/
+      delay(500);
 
     case 1:
       Serial.println("In stage 1: driving towards right wall");
       if(revisedDist(vl53.distance()) > a){
-        robot.drive(60,0,0,50,0.25);
+        robot.drive(60,0,0,50,0.4);
       }else{
         stage++;
-        delay(1000);
-        robot.turn(CCW, 90.0, true);
+        delay(100);
+        robot.turn(CCW, 100.0, true);
         robot.stop();
         delay(500);
       }
@@ -139,35 +139,33 @@ void loop() {
     case 2:
       //Drive forward based on IR sensor distance from front wall, b
       Serial.println("In stage 2: Driving Forward to front wall");
-      if(revisedDist(vl53.distance()) > b){
-        Serial.println(error);
-        robot.drive(60,0,0,50,1);
-      }else{
+      
+        ds(60,0,b,50,92);
+    
         stage++;
         delay(1000);
         robot.turn(CW, 90.0, true);
         robot.stop();
         delay(1000);
-      }
+      
       break;
 
     case 3:
       Serial.println("In stage 3: Drive away from right wall");
-      if(revisedDist(vl53.distance()) < c){
-        robot.drive(-60,0,0,50,0.25);
-      }else{
+       ds2(-60,0,c,50,10);
+      
         stage++;
         delay(1000);
         robot.turn(CCW, 90.0, true);
         robot.stop();
         delay(1000);
-      }
+      
       break;
 
     case 4: 
       //Drive forward to push button
-      Serial.println("In stage 3: Drive forward");
-      robot.drive(100,0,0,50,6);
+      Serial.println("In stage 3.5: Drive forward");
+      ds(100,0,10,50,8);
       stage++;
       robot.stop();
       delay(1000);
@@ -186,7 +184,11 @@ void loop() {
     case 6:
       //Rotate 180 to resume loop
       Serial.println("In stage 5: Rotate 180");
-      robot.turn(CW, 180.0, true);
+      // while(abs(robot.getAngle()-180)>=TOLERANCE){
+      //    //robot.turn(CW, 10.0, true);
+      //    robot.drive(0,0,(robot.getAngle()-180)*kp);
+      // }
+      robot.turn(CW, 210.0, true);
       delay(1000);
       stage=0;
       break;
@@ -197,6 +199,77 @@ void loop() {
     delay(10);
   }
   
+  
+void ds(int _drive, int strafe, float d_stop, int duration, float dist){
+  robot.clearAllEncCount();
+  if(_drive > 0){
+    float e=0.0,kp=5.3;
+    float desired_angle = robot.getAngle();
+    float currY = robot.Get_Y_Pos();
+    while(abs(robot.Get_Y_Pos()-currY) < dist && revisedDist(vl53.distance())>d_stop ){
+      robot.clearAllEncCount();
+      e = (robot.getAngle()-desired_angle)*kp;
+      robot.drive(_drive, 0, e);
+      delay(duration);
+      robot.stop();
+      robot.Update_Pos(FORWARD);
+    }
+  } else if (_drive < 0){
+    float e = 0.0, kp= 5.3;
+    float desired_angle = robot.getAngle();
+    float currY = robot.Get_Y_Pos();
+    while(abs(robot.Get_Y_Pos()-currY) < dist && revisedDist(vl53.distance())>d_stop ){
+      robot.clearAllEncCount();
+      e = (robot.getAngle()-desired_angle)*kp;
+      robot.drive(_drive, 0, e);
+      delay(duration);
+      robot.stop();
+      robot.Update_Pos(BACKWARD);
+    }
+  } else if (strafe > 0){
+
+  } else if (strafe < 0){
+
+  } else {
+
+  }
+}
+
+
+void ds2(int _drive, int strafe, float d_stop, int duration, float dist){
+  robot.clearAllEncCount();
+  if(_drive > 0){
+    float e=0.0,kp=5.3;
+    float desired_angle = robot.getAngle();
+    float currY = robot.Get_Y_Pos();
+    while(abs(robot.Get_Y_Pos()-currY) < dist && revisedDist(vl53.distance())<d_stop ){
+      robot.clearAllEncCount();
+      e = (robot.getAngle()-desired_angle)*kp;
+      robot.drive(_drive, 0, e);
+      delay(duration);
+      robot.stop();
+      robot.Update_Pos(FORWARD);
+    }
+  } else if (_drive < 0){
+    float e = 0.0, kp= 5.3;
+    float desired_angle = robot.getAngle();
+    float currY = robot.Get_Y_Pos();
+    while(abs(robot.Get_Y_Pos()-currY) < dist && revisedDist(vl53.distance())<d_stop){
+      robot.clearAllEncCount();
+      e = (robot.getAngle()-desired_angle)*kp;
+      robot.drive(_drive, 0, e);
+      delay(duration);
+      robot.stop();
+      robot.Update_Pos(BACKWARD);
+    }
+  } else if (strafe > 0){
+
+  } else if (strafe < 0){
+
+  } else {
+
+  }
+}
 
 
 //OBSELETE

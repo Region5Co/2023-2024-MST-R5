@@ -184,7 +184,7 @@ void Robot::turn(turnDirection direction, float degrees, bool test){
   switch(direction) {
     case CW:
       leftDist = 0;
-      while(abs(leftDist) < 11.85){
+      while(abs(leftDist) < 11.8){
         clearAllEncCount();
         drive(70, -70, -70, 70);
         delay(50);
@@ -195,7 +195,7 @@ void Robot::turn(turnDirection direction, float degrees, bool test){
 
     case CCW:
       leftDist = 0;
-      while(abs(leftDist) < 11.85){
+      while(abs(leftDist) < 11.8){
         clearAllEncCount();
         drive(-70, 70, 70, -70);
         delay(50);

@@ -50,31 +50,22 @@ Robot robot(&fl, &fr, &br, &bl);
 float base_angle=0.0;
 float kp=2.1;
 int stage = 0;
-int a = 190; //distance from the right wall
+int a = 150; //distance from the right wall
 int b = 300; //distance from wall were facing
-int c = 200; //distance to hit the button?
+int c = 250; //distance to hit the button?
 double an;
 double error1=0;
 
 
 void setup() {
-<<<<<<< HEAD
   fl.attachEncoder(&encFL);
   fr.attachEncoder(&encFR);
   bl.attachEncoder(&encBL);
   br.attachEncoder(&encBR);
-
-  #ifdef IEEE_SERIAL
-   Serial.begin(115200);
-    Serial.println("In Setup");
-    delay(100);
-  #endif
-=======
  
   Serial.begin(115200);
   Serial.println("In Setup");
   delay(100);
->>>>>>> 43ddb43b225824292658f22cb91e726fb93ee0e8
    
   gyro = Gyro(false,true);
   robot.addIMU(&gyro);
@@ -116,33 +107,15 @@ void loop() {
  
   switch(stage){ //make stage variable
     case 0: //need to get data from ultrasonic sensor (this is psuedocode)
-<<<<<<< HEAD
-    {
-      Serial.println("In case 0");
-      robot.drive(70, 0, 0.0, 25, 30.0);
-      delay(1000);
-      robot.drive(-70, 0, 0.0, 25, 30.0);
-      delay(1000);
-
-      robot.turn(CCW, 180.0, true);
-      delay(1000);
-
-      Serial.println("In stage 0");
-      delay(100);
-      moveUntilWithServo(RIGHT, a, true);
-      delay(100);
-      stage = 1;
-=======
       Serial.println("In stage 0: Moving Right");
       if(revisedDist(vl53.distance()) > a){
         robot.drive(0,80,(error)*kp);
       }else{
         stage++;
         robot.stop();
-        myservo.write(20);
+        myservo.write(50);
         delay(1000);
       }
->>>>>>> 43ddb43b225824292658f22cb91e726fb93ee0e8
       break;
 
     case 1:
@@ -173,14 +146,9 @@ void loop() {
       Serial.println("In stage 3: Drive forward");
       //go full forward
       robot.drive(100,0,0,50,5);
-<<<<<<< HEAD
-      delay(100);
-      stage = 4;
-=======
       stage++;
       robot.stop();
-      delay(50000);
->>>>>>> 43ddb43b225824292658f22cb91e726fb93ee0e8
+      delay(1000);
       break;
 
     case 4: 
@@ -188,43 +156,21 @@ void loop() {
       //drive backwards
       robot.drive(-100,0,0,50,5);
       robot.stop();
-<<<<<<< HEAD
-
-      stage = 5;
-      break;
-      /* here would just need to back up a small bit*/
-    }
-    case 5:
-      robot.turn(CW, 180.0, true);
       delay(1000);
-      stage = 0;
-      break;
-=======
-      delay(50000);
-      error= ann-(base_angle+180);
       stage++;
       break;
 
     case 5:
       Serial.println("In stage 5: Rotate 180");
-      error= ann-(base_angle+180);
-      if(error>TOLERANCE){
-        robot.drive(0,0,(error)*kp);
-        delay(500);
-      }else{
-        stage=0;
-        robot.stop();
-        myservo.write(20);
-        delay(1000);
-        base_angle+=180;
-      }
+      robot.turn(CW, 180.0, true);
+      delay(1000);
+      stage=0;
       break;
 
     default:
       break;
     }
     delay(10);
->>>>>>> 43ddb43b225824292658f22cb91e726fb93ee0e8
   }
   
 

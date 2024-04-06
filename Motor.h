@@ -16,7 +16,7 @@ class Motor {
     void setReversed(bool reversed);
     void stop();
     void run(int velocity);
-
+    void decrease(float);
     void attachEncoder(Encoder* en);
     Encoder* getEncoder();
     float getAngularVelocity();
@@ -26,6 +26,7 @@ class Motor {
     int pwmPin;
     int dirPin;
     int enPin;
+    float d;
     bool reversed;
     Encoder* encoder;
 };

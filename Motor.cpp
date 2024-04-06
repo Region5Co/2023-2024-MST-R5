@@ -36,6 +36,10 @@ void Motor::init() {
   #endif
 }
 
+void Motor::decrease(float _d){
+  this->d =_d;
+}
+
 //@brief Designate an encoder to specific Motor
 //@param en the encoder attached to motor. This should be initialized already
 //
@@ -53,6 +57,7 @@ Encoder* Motor::getEncoder(){
 //@param speed An integer ranging from 0-100 that will be mapped and fitted to a 8-bit value (0-255)
 //
 void Motor::setSpeed(int speed) {
+  speed*=d;
   analogWrite(pwmPin, constrain(map(speed, 0, 100, 0, 255), 0, 255));
 }
 

@@ -76,57 +76,86 @@ static const traverse_node Travese_Nodes[]={A_to_D,
 
 
 float desired_angle=0.0;
-
 int i=0;
-
-double error1=0;
+int movement =0;
+float kp=2.3;
+double speed=75;
+float dist=2.0;
+float error=0.0;
 void setup() {
  
-  #ifdef IEEE_SERIAL
-   Serial.begin(115200);
-    Serial.println("In Setup");
-    delay(100);
-  #endif
+  Serial.begin(115200);
+  Serial.println("In Setup");
+  delay(100);
+
    
   gyro = Gyro(false,true);
   robot.addIMU(&gyro);
   robot.init();
   an=gyro.update();
-  myservo.attach(SERVO_PIN);
+  //myservo.attach(SERVO_PIN);
   //Initialize State Machine
   //machina.init(&init_s);
-  an=180;
+  // an=180;
 
 }
 
 void loop() {
   double n = gyro.update();
   
-  double error=n-an;
- 
-    float k=1.5;
-    float k2 = 1;
-    int speed = 50;
-    //Serial.println(gyro.getGyroZ());
-    robot.drive(0,0,(error)*k);
-    //delay(100);
-    error1=error;
+  switch(movement){
+    default:
+    case 0:
+      //re-orientate
+      desired_angle = Travese_Nodes[i].reset_angle;
+      error= gyro.update()-desired_angle;
+      if(abs(error)>TOLERANCE){
+        robot.drive(0,0,error*kp);
+      }else{
+
+      movement=1;
+      robot.stop();
+      }
+      break;
     
-    //robot.turn(75,180);
-    
-    
-    //delay(2000);
-    //turn 45 degrees CW
-    //int current_pos = encoder.getEncDist();
-    //int goal = Travese_Nodes[i].ft - current_pos;
-    //Serial.println(encoder.getEncDist());
-    // i=0;
-    // while(encoder.getEncDist()<goal){
-    //   robot.drive(FORWARD, 60, 1000);
-    //   //checkObstruction(forward, 200,Travese_Nodes[i].left_right);
-    // }
-    i= (i>=MAX_T_INDEX)? 0: i+1;
+    case 1:
+      //rotate from ass to wall
+      desired_angle = Travese_Nodes[i].angle;
+      error= gyro.update()-desired_angle;
+      if(abs(error)>TOLERANCE){
+        robot.drive(0,0,error*kp);
+      }else{
+        movement=2;
+        robot.stop();
+      }
+      break;
+    case 2:
+      //drive straight
+      error= gyro.update()-desired_angle;
+      if(dist<Travese_Nodes[i].ft){
+        robot.drive(speed,0,error*kp);
+      }else{
+        movement=0;
+        i = (i>=MAX_T_INDEX)? 0: (i+1);
+        robot.stop();
+      }
+      break;
+  }
+  //robot.turn(75,180);
   
+  
+  //delay(2000);
+  //turn 45 degrees CW
+  // int current_pos = encoder.getEncDist();
+  // int goal = Travese_Nodes[i].ft - current_pos;
+  // Serial.println(encoder.getEncDist());
+  // i=0;
+  // while(encoder.getEncDist()<goal){
+  //   robot.drive(FORWARD, 60, 1000);
+  //   //checkObstruction(forward, 200,Travese_Nodes[i].left_right);
+  // }
+  // i= (i>=MAX_T_INDEX)? 0: i+1;
+
 }
 
 

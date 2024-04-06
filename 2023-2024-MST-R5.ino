@@ -51,7 +51,7 @@ float base_angle=0.0;
 float kp=2.1;
 int stage = 0;
 int a = 150; //distance from the right wall
-int b = 300; //distance from wall were facing
+int b = 200; //distance from wall were facing
 int c = 250; //distance to hit the button?
 double an;
 double error1=0;
@@ -97,7 +97,7 @@ void setup() {
   bl.decrease(de);
   br.decrease(1.1);
   base_angle = robot.getAngle();
-  myservo.write(150);
+  myservo.write(50);
 }
 
 
@@ -106,7 +106,9 @@ void loop() {
   float error=ann-base_angle;
  
   switch(stage){ //make stage variable
-    case 0: //need to get data from ultrasonic sensor (this is psuedocode)
+    case 0:
+      /*
+      //Move right based on IR sensor distance from wall, a
       Serial.println("In stage 0: Moving Right");
       if(revisedDist(vl53.distance()) > a){
         robot.drive(0,80,(error)*kp);
@@ -117,8 +119,23 @@ void loop() {
         delay(1000);
       }
       break;
+      */
+      //Move right based on IR sensor distance from wall, a
+      Serial.println("In stage 0: Moving Right");
+      robot.drive(70, 0, 0, 50, 6);
+      robot.turn(CW, 90.0, true);
+      if(revisedDist(vl53.distance()) > a){
+        robot.drive(75,0,(error)*kp);
+      }else{
+        stage++;
+        robot.turn(CCW, 90.0, true);
+        robot.stop();
+        delay(1000);
+      }
+      break;
 
     case 1:
+      //Drive forward based on IR sensor distance from front wall, b
       Serial.println("In stage 1: Driving Forward");
       if(revisedDist(vl53.distance()) > b){
         Serial.println(error);
@@ -126,12 +143,13 @@ void loop() {
       }else{
         stage++;
         robot.stop();
-        myservo.write(150);
         delay(1000);
       }
       break;
 
     case 2:
+      /*
+      //Drive left based on IR sensor distance from right wall, c
       Serial.println("In stage 2: Driving Left");
       if(revisedDist(vl53.distance()) < c){
         robot.drive(0,-75,(error)*kp);
@@ -141,26 +159,40 @@ void loop() {
         delay(1000);
       }
       break;
+      */
+      robot.turn(CW, 90.0, true);
+      Serial.println("In stage 2: Driving Left");
+      if(revisedDist(vl53.distance()) < c){
+        robot.drive(-75,0,(error)*kp);
+      }else{
+        stage++;
+        robot.turn(CCW, 90.0, true);
+        robot.stop();
+        delay(1000);
+      }
+      break;
 
     case 3: 
+      //Drive forward to push button
       Serial.println("In stage 3: Drive forward");
-      //go full forward
-      robot.drive(100,0,0,50,5);
+      robot.drive(100,0,0,50,6);
       stage++;
       robot.stop();
       delay(1000);
       break;
 
     case 4: 
+      //Drive backward away from button
       Serial.println("In stage 4: Drive Backwards");
       //drive backwards
-      robot.drive(-100,0,0,50,5);
+      robot.drive(-100,0,0,50,4);
       robot.stop();
       delay(1000);
       stage++;
       break;
 
     case 5:
+      //Rotate 180 to resume loop
       Serial.println("In stage 5: Rotate 180");
       robot.turn(CW, 180.0, true);
       delay(1000);

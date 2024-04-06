@@ -148,7 +148,7 @@ void setup() {
   //Initialize State Machine
   //machina.init(&init_s);
 
-
+  desired_angle = robot.getAngle();
 }
 
 int stage = 0;
@@ -158,9 +158,6 @@ int stage = 0;
 void loop() {
   //delay(100);
   //error1=error;
-  
-  
-  
   //delay(2000);
   //turn 45 degrees CW
   /*
@@ -174,38 +171,15 @@ void loop() {
   }
   i= (i>=MAX_T_INDEX)? 0: i+1;
   */
-
+  float ann = robot.getAngle();
   switch(stage){ //make stage variable
     case 0: //need to get data from ultrasonic sensor (this is psuedocode)
     {
-      /*
-      robot.drive(FORWARD, 100, 500);
-      Serial.println(robot.Get_Y_Pos());
-      robot.drive(BACKWARD, 100, 500);
-      Serial.println(robot.Get_Y_Pos());
-      */   
-
       
       Serial.println("In stage 0");
-      delay(2000);
+      delay(100);
       moveUntilWithServo(RIGHT, a, true);
-      delay(1000);
-      
-
-      /*
-      robot.drive(FORWARD, 70, 100);
-      
-      Serial.print("Encoder: ");
-      Serial.print(encFL.getEncDist());
-      Serial.print(" ");
-      Serial.print(encFR.getEncDist());
-      Serial.print(" ");
-      Serial.print(encBL.getEncDist());
-      Serial.print(" ");
-      Serial.print(encBR.getEncDist());
-      Serial.println(" ");
-      */
-
+      delay(100);
       stage = 1;
       break;
     }
@@ -220,20 +194,19 @@ void loop() {
     case 2:
     {
       Serial.println("In stage 2");
-      delay(2000);
+      delay(100);
       moveUntilWithServo(LEFT, c, false);
-      delay(1000);
-
+      delay(100);
       stage = 3;
       break;
     }
     case 3: 
     {
       Serial.println("In stage 3");
-      delay(1000);
-      robot.drive(FORWARD, 100, 1500);
-      delay(1000);
-
+      delay(100);
+      //go full forward
+      robot.drive(100,0,0);
+      delay(100);
       stage = 4;
       break;
     }
@@ -241,11 +214,14 @@ void loop() {
     {
       Serial.println("In stage 4");
       delay(1000);
-      robot.drive(BACKWARD,100,750);
+      //drive backwards
+      robot.drive(-100,0,0);
       delay(500);
-      robot.turn(70, 180);
+      float kp=2.1;
+      float error= ann-(desired_angle+180);
+      //robot.turn(70, 180);
+      robot.drive(0,0,(error)*kp);
       delay(500);
-
       stage = 0;
       break;
       /* here would just need to back up a small bit*/
@@ -255,40 +231,12 @@ void loop() {
 }
 
 
-void square() {
-  Serial.println("Forward");
-  robot.drive(FORWARD, 100, 1000);
-  Serial.println("Right");
-  robot.drive(RIGHT, 100, 1000);
-  Serial.println("Backward");
-  robot.drive(BACKWARD, 100, 1000);
-  Serial.println("Left");
-  robot.drive(LEFT, 100, 1000);
-}
-
-void servoTest() {
-  myservo.write(20);
-  delay(1500);
-  myservo.write(150);
-  delay(750);
-}
 
 void moveUntilLt(moveDirection dir, int targetDist) {
-  /*
-  while (vl53.distance() == -1){
-    Serial.println(vl53.distance());
-    Serial.print("stuck in -1");
-    robot.drive(dir, 100);
-    delay(50);
-  }*/
-
   an = gyro.update();
-
   while (revisedDist(vl53.distance()) > targetDist) {
     double n = gyro.update();
-  
     double error=an-n;
- 
     float k=-3.5;
     float k2 = 1;
     int speed = 50;

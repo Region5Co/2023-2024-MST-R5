@@ -35,10 +35,12 @@ friend class Odometry;
 
     void stop();
     void drive(int drive, int strafe, float rotation);
+    void drive(int drive, int strafe, float rotation, int duration, float dist);
     void drive(moveDirection direction, int speed);
     void drive(int fl, int fr, int br, int bl);
     void drive(moveDirection direction, int speed, int duration);
     void drive(int fl, int fr, int br, int bl, int duration);
+
     void addIMU(Gyro*);
     #if IEEE_US
     void addUltrasonic(Ultrasonic*);
@@ -50,12 +52,12 @@ friend class Odometry;
     float Get_Y_Pos();
     void Update_Pos(moveDirection direction);
     void clearAllEncCount();
-
+    float getAngle();
   private:
     float X_Pos;
     float Y_Pos;
     Motor* getMotor(WHEEL);
-    float getAngle();
+    
     Motor *fl, *fr, *br, *bl;
 
     

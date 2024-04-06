@@ -93,6 +93,10 @@ void Robot::drive(int drive, int strafe, float rotation) {
     br->run(drive+strafe-rotation);
 }
 
+void Robot::drive(int drive, int strafe, float rotation, int duration, float dist){
+
+}
+
 
 
 //@brief Moves the robot wheels with independent speed values

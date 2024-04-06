@@ -64,3 +64,8 @@ float Encoder::getCurMoveEncDist(){
 
   return float(curMoveEncCount)/358.0*5.874778;
 }
+
+int Encoder::getCurrMoveCount()
+{
+    return this->curMoveEncCount;
+}

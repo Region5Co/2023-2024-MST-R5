@@ -68,5 +68,5 @@ double Gyro::update(){
 }
 
 float Gyro::getGyroZ(){
-    return gyroCorrectedYaw;
+    return update();
 }

@@ -24,6 +24,7 @@ public:
     void calibrate();
     double update();
     float getGyroZ();
+    void reset();
 private:
     //Devices
     Adafruit_LSM6DS3TRC imu;

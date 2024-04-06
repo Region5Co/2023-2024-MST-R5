@@ -61,10 +61,15 @@ double Gyro::update(){
         float lastFrequency = (float) 1000000.0 / lastInterval;
         gyroYaw = gyroYaw + (gyroZ / lastFrequency);
         gyroCorrectedYaw +=  ((gyroZ - gyroDriftZ) / lastFrequency);
-        gyroCorrectedYaw += (gyroCorrectedYaw>=360)? -360:0;
-        gyroCorrectedYaw += (gyroCorrectedYaw<0)? 360:0;
+        // gyroCorrectedYaw += (gyroCorrectedYaw>=360)? -360:0;
+        // gyroCorrectedYaw += (gyroCorrectedYaw<0)? 360:0;
     return gyroCorrectedYaw;
     }else return 0.0;
+}
+
+void Gyro::reset(){
+    gyroYaw = 0.0;
+    gyroCorrectedYaw = 0.0;
 }
 
 float Gyro::getGyroZ(){

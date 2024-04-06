@@ -78,9 +78,9 @@ static const traverse_node Travese_Nodes[]={A_to_D,
 float desired_angle=0.0;
 int i=0;
 int movement =0;
-float kp=2.3;
+float kp=3.1;
 double speed=75;
-float dist=2.0;
+float dist=0;
 float error=0.0;
 void setup() {
  
@@ -97,28 +97,26 @@ void setup() {
   //Initialize State Machine
   //machina.init(&init_s);
   // an=180;
+  int j=0;
+  while(j<80){
+    robot.drive(speed*0.7,0,(robot.getAngle()-an)*kp);
+    delay(10);
+    j++;
+  }
 
 }
 
 void loop() {
   double n = gyro.update();
-  
+  Serial.print("Anlge: ");
+  Serial.println(n);
+  Serial.print("Desired: ");
+  Serial.println(desired_angle);
+  delay(250);
   switch(movement){
+
     default:
     case 0:
-      //re-orientate
-      desired_angle = Travese_Nodes[i].reset_angle;
-      error= gyro.update()-desired_angle;
-      if(abs(error)>TOLERANCE){
-        robot.drive(0,0,error*kp);
-      }else{
-
-      movement=1;
-      robot.stop();
-      }
-      break;
-    
-    case 1:
       //rotate from ass to wall
       desired_angle = Travese_Nodes[i].angle;
       error= gyro.update()-desired_angle;
@@ -129,17 +127,31 @@ void loop() {
         robot.stop();
       }
       break;
-    case 2:
+    case 1:
       //drive straight
       error= gyro.update()-desired_angle;
       if(dist<Travese_Nodes[i].ft){
         robot.drive(speed,0,error*kp);
+        dist+=0.001;
       }else{
         movement=0;
         i = (i>=MAX_T_INDEX)? 0: (i+1);
         robot.stop();
       }
-      break;
+    case 2:
+      //re-orientate
+      desired_angle = Travese_Nodes[i].reset_angle;
+      error= gyro.update()-desired_angle;
+      if(abs(error)>TOLERANCE){
+        robot.drive(0,0,error*kp);
+        gyro.reset();
+      }else{
+        movement=0;
+        robot.stop();
+      }
+    break;
+    
+
   }
   //robot.turn(75,180);
   

@@ -120,7 +120,7 @@ int revisedDist(int dist)   {
     }
     return dist
 }
-}
+
 void evade(bool ISLEFT){
     if (ISLEFT){
       //move certain amount left
@@ -134,14 +134,14 @@ void evade(bool ISLEFT){
 
   
   }
-void checkObstruction(moveDirection dir, int watchArea, ISLEFT) { 
+void checkObstruction(int watchArea, ISLEFT) { 
 
   if (revisedDist(vl53.distance()) < watchArea ) {
     evade(ISLEFT)
     
   Serial.println(revisedDist(vl53.distance()));
   }
-
+}
 void moveUntilWithServo(moveDirection dir, int targetDist, bool ISLEFT) { // 90 degree rotation on this lad lmao
   if (dir == FORWARD) {
     myservo.write(20);

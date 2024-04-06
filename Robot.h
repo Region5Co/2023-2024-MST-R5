@@ -22,6 +22,8 @@
 #define CW turnDirection::cw
 #define CCW turnDirection::ccw
 
+#define Kp 3.6 //change something??
+
 class Robot {
 friend class Odometry;
   public:
@@ -33,20 +35,34 @@ friend class Odometry;
 
     void stop();
     void drive(int drive, int strafe, float rotation);
+    void drive(int drive, int strafe, float rotation, int duration, float dist);
     void drive(moveDirection direction, int speed);
     void drive(int fl, int fr, int br, int bl);
     void drive(moveDirection direction, int speed, int duration);
-    void drive(int fl, int fr, int br, int bl, int duration);
+    //void drive(int fl, int fr, int br, int bl, int duration);
+    // void drive(int fl, int fr, int br, int bl, int duration);
+
     void addIMU(Gyro*);
     #if IEEE_US
     void addUltrasonic(Ultrasonic*);
     #endif
-    void turn(turnDirection direction, int speed);
-    void turn(float rotation, float desired_a);
-    void turn(turnDirection direction, int speed, int duration);
-    Motor* getMotor(WHEEL);
+    //void turn(turnDirection direction, int speed);
+    void turn(turnDirection direction, float degrees, bool test);
+    //void turn(float rotation, float desired_a);
+    //void turn(turnDirection direction, int speed, int duration);
+    float Get_X_Pos();
+    float Get_Y_Pos();
+    void Update_Pos(moveDirection direction);
+    void clearAllEncCount();
     float getAngle();
   private:
+    float X_Pos;
+    float Y_Pos;
+    float currY;
+    float currX;
+    float leftDist;
+    Motor* getMotor(WHEEL);
+    
     Motor *fl, *fr, *br, *bl;
 
     

@@ -16,8 +16,11 @@ friend class Motor;
     int getEncCount();
     int getEncIntPin();
     void incEncCount();
-    int getEncDist();
+    float getEncDist();
+    float getCurMoveEncDist();
+    int getCurrMoveCount();
     float getRPM();
+    void clearEncCount();
   
   private:  
     int encCount;
@@ -27,6 +30,7 @@ friend class Motor;
     float numRev;
     float distInch;
     float angV;
+    int curMoveEncCount;
     uint32_t currTime;
     uint32_t lastTime;
     float RPM;

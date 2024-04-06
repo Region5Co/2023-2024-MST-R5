@@ -113,40 +113,40 @@ void Robot::drive(moveDirection direction, int speed, int duration) {
 //@param fl,fr,br,bl Integer representing velocity ranging [-100,100]
 //@param duration Time in milliseconds to allow robot to drive
 //
-void Robot::drive(int fl, int fr, int br, int bl, int duration) {
-  drive(fl, fr, br, bl);
-  delay(duration);
-  stop();
-}
+// void Robot::drive(int fl, int fr, int br, int bl, int duration) {
+//   drive(fl, fr, br, bl);
+//   delay(duration);
+//   stop();
+// }
 
 //@brief Moves the robot in the passed direction about its center
 //@param direction Requires an input of enum @ref turnDirection to go desired direction
 //@param speed An integer ranging from [-100, 100] for all motors
 //
-void Robot::turn(turnDirection direction, int speed) {
-  switch(direction) {
-    case CW:
-      drive(speed, -speed, -speed, speed);
-      break;
+// void Robot::turn(turnDirection direction, int speed) {
+//   switch(direction) {
+//     case CW:
+//       drive(speed, -speed, -speed, speed);
+//       break;
 
-    case CCW:
-      drive(-speed, speed, speed, -speed);
-      break;
-    default:
-      break;
-  }
-}
+//     case CCW:
+//       drive(-speed, speed, speed, -speed);
+//       break;
+//     default:
+//       break;
+//   }
+// }
 
 //@brief Moves the robot in the passed direction about its center
 //@param direction Requires an input of enum @ref turnDirection to go desired direction
 //@param speed An integer ranging from [-100, 100] for all motors
 //@param duration Time in milliseconds to allow robot to drive
 //
-void Robot::turn(turnDirection direction, int speed, int duration) {
-  turn(direction, speed);
-  delay(duration);
-  stop();
-}
+// void Robot::turn(turnDirection direction, int speed, int duration) {
+//   turn(direction, speed);
+//   delay(duration);
+//   stop();
+// }
 
 //@brief Returns an attached Motor
 //@param wheel uses WHEEL enum to choose a motor
@@ -168,12 +168,102 @@ float Robot::getAngle(){
   return this->imu->getGyroZ();
 }
 
-void Robot::turn(float rotation, float desired_angle){
-    rotation *= (abs(getAngle()-desired_angle)>=0)? 1:-1;
-    rotation *= 1-(getAngle()/desired_angle);
-    Serial.println(rotation);
-    float kp = 2.1;
-    rotation *= (abs(rotation)<15)? 0:kp;
-    drive(0,0,rotation);
+// void Robot::turn(float rotation, float desired_angle){
+//     rotation *= (abs(getAngle()-desired_angle)>=0)? 1:-1;
+//     rotation *= 1-(getAngle()/desired_angle);
+//     Serial.println(rotation);
+//     float kp = 2.1;
+//     rotation *= (abs(rotation)<15)? 0:kp;
+//     drive(0,0,rotation);
   
+// }
+float Robot::Get_Y_Pos(){
+  return this->Y_Pos;
 }
+void Robot::clearAllEncCount(){
+  fl->getEncoder()->clearEncCount();
+  fr->getEncoder()->clearEncCount();
+  bl->getEncoder()->clearEncCount();
+  br->getEncoder()->clearEncCount();
+}
+
+
+void Robot::Update_Pos(moveDirection direction){
+  switch(direction){
+    case FORWARD:
+      Y_Pos += (abs(fl->getEncoder()->getCurMoveEncDist()) + abs(fr->getEncoder()->getCurMoveEncDist()) + abs(bl->getEncoder()->getCurMoveEncDist()) + abs(br->getEncoder()->getCurMoveEncDist()))/4.0;
+      break;
+    case BACKWARD:
+      Y_Pos -= (abs(fl->getEncoder()->getCurMoveEncDist()) + abs(fr->getEncoder()->getCurMoveEncDist()) + abs(bl->getEncoder()->getCurMoveEncDist()) + abs(br->getEncoder()->getCurMoveEncDist()))/4.0;
+      break;
+  }
+  
+
+}
+void Robot::drive(int _drive, int strafe, float rotate, int duration, float dist){
+  clearAllEncCount();
+  if(_drive > 0){
+    float e=0.0;
+    float desired_angle = getAngle();
+    currY = Get_Y_Pos();
+    while(abs(Get_Y_Pos()-currY) < dist){
+      clearAllEncCount();
+      e = (getAngle()-desired_angle)*Kp;
+      drive(_drive, 0, e);
+      delay(duration);
+      stop();
+      Update_Pos(FORWARD);
+    }
+  } else if (_drive < 0){
+    float e = 0.0;
+    float desired_angle = getAngle();
+    currY = Get_Y_Pos();
+    while(abs(Get_Y_Pos()-currY) < dist){
+      clearAllEncCount();
+      e = (getAngle()-desired_angle)*Kp;
+      drive(_drive, 0, e);
+      delay(duration);
+      stop();
+      Update_Pos(BACKWARD);
+    }
+  } else if (strafe > 0){
+
+  } else if (strafe < 0){
+
+  } else {
+
+  }
+}
+
+
+void Robot::turn(turnDirection direction, float degrees, bool test){
+  switch(direction) {
+    case CW:
+      leftDist = 0;
+      while(abs(leftDist) < (degrees/180)*11.8){
+        //getAngle();
+        clearAllEncCount();
+        drive(70, -70, -70, 70);
+        delay(50);
+        stop();
+        leftDist += float((fl->getEncoder()->getCurMoveEncDist()+bl->getEncoder()->getCurMoveEncDist())/2.0);
+        Serial.println(fl->getEncoder()->getCurMoveEncDist());
+      }
+      break;
+
+    case CCW:
+      leftDist = 0;
+      while(abs(leftDist) < (degrees/180)*11.8){
+        getAngle();
+        clearAllEncCount();
+        drive(-70, 70, 70, -70);
+        delay(50);
+        stop();
+        leftDist += float((fl->getEncoder()->getCurMoveEncDist()+bl->getEncoder()->getCurMoveEncDist())/2.0);
+      }
+      break;
+    default:
+      break;
+  }
+}
+

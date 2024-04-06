@@ -32,9 +32,8 @@ int Encoder::getEncIntPin(){
 
 //@brief Gets the total distance calculated from the number of encoder rotations (in inches)
 //
-int Encoder::getEncDist(){
-  numRev = float(encCount)/358;
-  return numRev*wheelCircum;
+float Encoder::getEncDist(){
+  return float(encCount)/358.0*5.874778*1.14;
 }
 
 //Not tested...
@@ -49,9 +48,23 @@ void Encoder::incEncCount(){
   currTime = millis();
   if (digitalRead(this->dirPin) > 0){
     encCount +=1;
+    curMoveEncCount +=1;
   } else {
     encCount -=1;
+    curMoveEncCount -=1;
   }
   lastTime = currTime;
 }
 
+void Encoder::clearEncCount(){
+  curMoveEncCount = 0;
+}
+
+float Encoder::getCurMoveEncDist(){
+  return float(curMoveEncCount)/358.0*5.874778*1.14;
+}
+
+int Encoder::getCurrMoveCount()
+{
+    return this->curMoveEncCount;
+}

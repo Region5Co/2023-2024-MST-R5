@@ -73,5 +73,5 @@ void Gyro::reset(){
 }
 
 float Gyro::getGyroZ(){
-    return gyroCorrectedYaw;
+    return update();
 }

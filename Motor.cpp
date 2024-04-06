@@ -53,6 +53,7 @@ Encoder* Motor::getEncoder(){
 //@param speed An integer ranging from 0-100 that will be mapped and fitted to a 8-bit value (0-255)
 //
 void Motor::setSpeed(int speed) {
+  speed*=d;
   analogWrite(pwmPin, constrain(map(speed, 0, 100, 0, 255), 0, 255));
 }
 
@@ -70,6 +71,10 @@ void Motor::setReversed(bool reversed) {
 void Motor::stop() {
   setSpeed(0);
   digitalWrite(dirPin, 0);
+}
+
+void Motor::decrease(float _d){
+  this->d = _d;
 }
 
 //@brief Uses the inputed velocity to run the motor at a desired speed and corresponding dirrection

@@ -91,28 +91,28 @@ void setup() {
   gyro = Gyro(false,true);
   robot.addIMU(&gyro);
   robot.init();
-
+  an=gyro.update();
   myservo.attach(SERVO_PIN);
   //Initialize State Machine
   //machina.init(&init_s);
-
+  an=180;
 
 }
 
 void loop() {
   double n = gyro.update();
   
-  double error=60-n;
+  double error=n-an;
  
-    float k=-3.5;
+    float k=1.5;
     float k2 = 1;
     int speed = 50;
     //Serial.println(gyro.getGyroZ());
-    //robot.drive(speed,0,(error)*k);
+    robot.drive(0,0,(error)*k);
     //delay(100);
     error1=error;
     
-    robot.turn(75,60);
+    //robot.turn(75,180);
     
     
     //delay(2000);

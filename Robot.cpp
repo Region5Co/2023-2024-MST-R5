@@ -169,11 +169,11 @@ float Robot::getAngle(){
 }
 
 void Robot::turn(float rotation, float desired_angle){
-    rotation *= (abs(getAngle()-desired_angle)>=180)? 1:-1;
-    rotation *= 1-getAngle()/desired_angle;
+    rotation *= (abs(getAngle()-desired_angle)>=0)? 1:-1;
+    rotation *= 1-(getAngle()/desired_angle);
     Serial.println(rotation);
     float kp = 2.1;
-    rotation *= (abs(rotation)<10)?0:kp;
+    rotation *= (abs(rotation)<15)? 0:kp;
     drive(0,0,rotation);
   
 }

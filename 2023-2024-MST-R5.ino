@@ -59,16 +59,16 @@ double an;
 
 /******Traverse Nodes Init***************/
 typedef struct traverse_node{
-  float angle,x,y,ft, left_right;
+  float angle,x,y,ft, left_right,reset_angle;
 };
-traverse_node A_to_D{45,2,0,8.4853,1};
-traverse_node B_to_G{45,6,0,8.4853,0};
-traverse_node C_to_A{71.5651,8,2,6.3246,0};
-traverse_node D_to_H{116.6,8,6,8.9443,0};
-traverse_node E_to_C{71.5651,6,8,6.3246,0};
-traverse_node F_to_B{63.4349,2,8,8.9443,0};
-traverse_node G_to_E{71.5651,0,6,6.3246,0};
-traverse_node H_to_F{18.4349,0,2,6.3246,0};
+traverse_node A_to_D{45,2,0,8.4853,1,-135};
+traverse_node B_to_G{-45,6,0,8.4853,0,135};
+traverse_node C_to_A{-16.93,8,2,6.3246,0,163.07};
+traverse_node D_to_H{-28.07,8,6,8.9443,0,151.93};
+traverse_node E_to_C{-16.93,6,8,6.3246,0,163.07};
+traverse_node F_to_B{-28.07,2,8,8.9443,0,151.93};
+traverse_node G_to_E{-16.93,0,6,6.3246,0,163.07};
+traverse_node H_to_F{-73.07,0,2,6.3246,0,106.93};
 
 static const traverse_node Travese_Nodes[]={A_to_D,
       D_to_H,H_to_F,F_to_B,B_to_G,G_to_E,E_to_C};

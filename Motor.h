@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include "Encoder.h"
-
+#define MAX_RUN 100
 class Motor {
   friend class Robot;
   public:

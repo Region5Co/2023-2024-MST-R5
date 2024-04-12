@@ -10,10 +10,9 @@
 #include "Ultrasonic.h"
 #include <Servo.h>
 
-
+#define TOLERANCE 5
 #define MECANUM drivetrain::mecanum
 #define TWO_WHEEL drivetrain::twoWheel
-
 #define FORWARD moveDirection::forward
 #define BACKWARD moveDirection::backward
 #define LEFT moveDirection::left
@@ -22,8 +21,9 @@
 #define CW turnDirection::cw
 #define CCW turnDirection::ccw
 
-#define Kp 3.6 //change something??
-
+#define Kp 2.3 //change something??
+#define Ki 0.1
+#define Kd 0.1
 class Robot {
 friend class Odometry;
   public:
@@ -48,8 +48,9 @@ friend class Odometry;
     #endif
     //void turn(turnDirection direction, int speed);
     void turn(turnDirection direction, float degrees, bool test);
-    //void turn(float rotation, float desired_a);
-    //void turn(turnDirection direction, int speed, int duration);
+    void turning(float degrees);
+    // void turn(float rotation, float desired_a);
+    // void turn(turnDirection direction, int speed, int duration);
     float Get_X_Pos();
     float Get_Y_Pos();
     void Update_Pos(moveDirection direction);

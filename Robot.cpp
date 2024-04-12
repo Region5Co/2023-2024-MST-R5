@@ -267,3 +267,34 @@ void Robot::turn(turnDirection direction, float degrees, bool test){
   }
 }
 
+void Robot::turning(float desired_angle){
+  //PID Stuff
+  float error=0.0,
+    last_error=0.0,
+    e_int = 0.0;
+  long time =0.0,
+    lasttime = 0.0;
+  while(abs(error)>TOLERANCE){
+    time = micros();
+    error = getAngle() - desired_angle;
+    float delta_t = time-lasttime;
+    float kp = error * Kp;
+    e_int += error * (delta_t) * Ki;
+    float kd = ((error -last_error)/delta_t) * Kd;
+  
+    if((kp + e_int + kd)>MAX_RUN){
+      float saturation = MAX_RUN- (kp + e_int + kd);
+      e_int -=saturation;
+    }else if(-(kp + e_int + kd)<-MAX_RUN){
+      float saturation = MAX_RUN+(kp + e_int + kd)*-1;
+      e_int +=saturation;
+    }
+
+    drive(0,0,kp+e_int+kd);
+    delayMicroseconds(10);
+    
+    lasttime = time;
+    last_error = error;
+    
+  }
+}
